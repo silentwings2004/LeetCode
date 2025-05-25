@@ -90,6 +90,27 @@ public class LC2131_LongestPalindromebyConcatenatingTwoLetterWords {
 
         return res + (flag ? 2 : 0);
     }
+
+    // S3
+    // time = O(n), space = O(1)
+    public int longestPalindrome3(String[] words) {
+        int[][] cnt = new int[26][26];
+        for (String w : words) {
+            int a = w.charAt(0) - 'a', b = w.charAt(1) - 'a';
+            cnt[a][b]++;
+        }
+
+        int res = 0, odd = 0;
+        for (int i = 0; i < 26; i++) {
+            int c = cnt[i][i];
+            res += c - c % 2;
+            odd |= c % 2;
+            for (int j = i + 1; j < 26; j++) {
+                res += Math.min(cnt[i][j], cnt[j][i]) * 2;
+            }
+        }
+        return (res + odd) * 2;
+    }
 }
 /**
  * 设计回文串，左右对称
