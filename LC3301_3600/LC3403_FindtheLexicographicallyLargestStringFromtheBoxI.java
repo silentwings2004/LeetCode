@@ -30,6 +30,7 @@ public class LC3403_FindtheLexicographicallyLargestStringFromtheBoxI {
      * @param numFriends
      * @return
      */
+    // S1
     // time = O(n*(n - k)), space = O(n - k)
     public String answerString(String word, int numFriends) {
         int n = word.length(), m = numFriends - 1, mc = 0;
@@ -43,6 +44,20 @@ public class LC3403_FindtheLexicographicallyLargestStringFromtheBoxI {
                 if (s.compareTo(res) > 0) res = s;
                 mc = u;
             }
+        }
+        return res;
+    }
+
+    // S2
+    // time = O(n*(n - k)), space = O(n - k)
+    public String answerString2(String word, int numFriends) {
+        if (numFriends == 1) return word;
+        int n = word.length(), len = n - numFriends + 1;
+        String res = "";
+        for (int i = 0; i < n; i++) {
+            int j = Math.min(i + len - 1, n - 1);
+            String s = word.substring(i, j + 1);
+            if (s.compareTo(res) > 0) res = s;
         }
         return res;
     }

@@ -39,30 +39,27 @@ public class LC909_SnakesandLadders {
      */
     // time = O(n^2), space = O(n^2)
     public int snakesAndLadders(int[][] board) {
-        // corner case
-        if (board == null || board.length == 0 || board[0] == null || board[0].length == 0) return 0;
-
         int n = board.length;
-        Queue<Integer> queue = new LinkedList<>();
-        queue.offer(1); // {x, y}
-        boolean[] visited = new boolean[n * n + 1];
-        visited[1] = true;
+        Queue<Integer> q = new LinkedList<>();
+        q.offer(1);
+        boolean[] st = new boolean[n * n + 1];
+        st[1] = true;
 
         int step = 0;
-        while (!queue.isEmpty()) {
-            int size = queue.size();
-            while (size-- > 0) {
-                int cur = queue.poll();
-                if (cur == n * n) return step;
-                for (int k = 1; k <= Math.min(6, n * n - cur); k++) {
-                    int val = cur + k;
-                    int[] next = convert(board, val);
-                    int r = next[0], c = next[1];
-                    if (board[r][c] != -1) val = board[r][c];
-                    if (!visited[val]) {
-                        queue.offer(val);
-                        visited[val] = true;
-                    }
+        while (!q.isEmpty()) {
+            int sz = q.size();
+            while (sz-- > 0) {
+                int t = q.poll();
+                if (t == n * n) return step;
+                for (int i = 1; i <= 6; i++) {
+                    if (t + i > n * n) break;
+                    int nxt = t + i;
+                    int[] c = get(nxt, n);
+                    int x = c[0], y = c[1];
+                    if (board[x][y] != -1) nxt = board[x][y];
+                    if (st[nxt]) continue;
+                    st[nxt] = true;
+                    q.offer(nxt);
                 }
             }
             step++;
@@ -70,10 +67,9 @@ public class LC909_SnakesandLadders {
         return -1;
     }
 
-    private int[] convert(int[][] board, int val) {
-        int n = board.length;
-        int i = (val - 1) / n, j = (val - 1) % n;
-        int row = n - 1 - i, col = i % 2 == 0 ? j : n - 1 - j;
-        return new int[]{row, col};
+    private int[] get(int x, int n) {
+        int r = (x - 1) / n, c = (x - 1) % n;
+        if (r % 2 == 1) c = n - 1 - c;
+        return new int[]{n - 1 - r, c};
     }
 }

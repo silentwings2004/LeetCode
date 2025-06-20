@@ -35,6 +35,7 @@ public class LC3445_MaximumDifferenceBetweenEvenandOddFrequencyII {
      * @param k
      * @return
      */
+    // S1
     // time = O(n), space = O(n)
     final int inf = 0x3f3f3f3f;
     int k, n;
@@ -70,6 +71,33 @@ public class LC3445_MaximumDifferenceBetweenEvenandOddFrequencyII {
             }
             int v = f[i][x] - f[i][y];
             res = Math.max(res, v - g[f[i][x] & 1 ^ 1][f[i][y] & 1]);
+        }
+        return res;
+    }
+
+    // S2
+    // time = O(n * 25), space = O(5)
+    public int maxDifference2(String s, int k) {
+        int res = -inf;
+        for (int x = 0; x < 5; x++) {
+            for (int y = 0; y < 5; y++) {
+                int[] cur = new int[5], pre = new int[5];
+                int[][] mins = new int[][]{{inf, inf}, {inf, inf}};
+                int l = 0;
+                for (int i = 0; i < s.length(); i++) {
+                    int u = s.charAt(i) - '0';
+                    cur[u]++;
+                    int r = i + 1;
+                    while (r - l >= k && cur[x] > pre[x] && cur[y] > pre[y]) {
+                        int p = pre[x] & 1, q = pre[y] & 1;
+                        mins[p][q] = Math.min(mins[p][q], pre[x] - pre[y]);
+                        int v = s.charAt(l) - '0';
+                        pre[v]++;
+                        l++;
+                    }
+                    res = Math.max(res, cur[x] - cur[y] - mins[cur[x] & 1 ^ 1][cur[y] & 1]);
+                }
+            }
         }
         return res;
     }

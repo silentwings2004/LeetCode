@@ -26,29 +26,26 @@ public class LC2616_MinimizetheMaximumDifferenceofPairs {
      * @param p
      * @return
      */
-    // time = O(nlogn), space = O(n)
+    // time = O(nlogn), space = O(logn)
     public int minimizeMax(int[] nums, int p) {
         Arrays.sort(nums);
         int n = nums.length;
-        int[] w = new int[n - 1];
-        for (int i = 0; i + 1 < n; i++) w[i] = nums[i + 1] - nums[i];
-
-        int l = 0, r = (int) 1e9;
+        int l = 0, r = nums[n - 1] - nums[0];
         while (l < r) {
             int mid = l + r >> 1;
-            if (check(w, p, mid)) r = mid;
+            if (check(nums, p, mid)) r = mid;
             else l = mid + 1;
         }
         return r;
     }
 
-    private boolean check(int[] w, int p, int t) {
-        int n = w.length, cnt = 0;
-        for (int i = 0; i < n;) {
-            if (w[i] <= t) {
+    private boolean check(int[] nums, int p, int mid) {
+        int n = nums.length, cnt = 0;
+        for (int i = 0; i + 1 < n; i++) {
+            if (nums[i + 1] - nums[i] <= mid) {
                 cnt++;
-                i += 2;
-            } else i++;
+                i++;
+            }
         }
         return cnt >= p;
     }

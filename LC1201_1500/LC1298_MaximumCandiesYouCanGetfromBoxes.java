@@ -39,6 +39,7 @@ public class LC1298_MaximumCandiesYouCanGetfromBoxes {
      * @param initialBoxes
      * @return
      */
+    // S1
     // time = O(n), space = O(n)
     public int maxCandies(int[] status, int[] candies, int[][] keys, int[][] containedBoxes, int[] initialBoxes) {
         Queue<Integer> queue = new LinkedList<>();
@@ -61,6 +62,40 @@ public class LC1298_MaximumCandiesYouCanGetfromBoxes {
                     for (int newb : containedBoxes[b]) {
                         queue.offer(newb);
                     }
+                }
+            }
+        }
+        return res;
+    }
+
+    // S2
+    // time = O(n + L), space = O(n)
+    public int maxCandies2(int[] status, int[] candies, int[][] keys, int[][] containedBoxes, int[] initialBoxes) {
+        Queue<Integer> q = new LinkedList<>();
+        HashSet<Integer> closed = new HashSet<>();
+        HashSet<Integer> kst = new HashSet<>();
+        for (int x : initialBoxes) {
+            if (status[x] == 1) q.offer(x);
+            else closed.add(x);
+        }
+
+        int res = 0;
+        while (!q.isEmpty()) {
+            int t = q.poll();
+            res += candies[t];
+            for (int x : keys[t]) {
+                if (closed.contains(x)) {
+                    q.offer(x);
+                    closed.remove(x);
+                } else kst.add(x);
+            }
+            for (int x : containedBoxes[t]) {
+                if (status[x] == 1) q.offer(x);
+                else {
+                    if (kst.contains(x)) {
+                        q.offer(x);
+                        kst.remove(x);
+                    } else closed.add(x);
                 }
             }
         }

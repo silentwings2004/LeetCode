@@ -20,13 +20,10 @@ public class LC2016_MaximumDifferenceBetweenIncreasingElements {
      */
     // time = O(n), space = O(1)
     public int maximumDifference(int[] nums) {
-        // corner case
-        if (nums == null || nums.length == 0) return 0;
-
-        int n = nums.length, min = Integer.MAX_VALUE, res = -1;
-        for (int i = 0; i < n; i++) {
-            if (nums[i] <= min) min = nums[i];
-            else res = Math.max(res, nums[i] - min);
+        int minv = nums[0], res = -1;
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[i] > minv) res = Math.max(res, nums[i] - minv);
+            minv = Math.min(minv, nums[i]);
         }
         return res;
     }

@@ -24,27 +24,52 @@ public class LC1432_MaxDifferenceYouCanGetFromChanginganInteger {
      * @param num
      * @return
      */
+    // S1
     // time = O(n), space = O(n)
     public int maxDiff(int num) {
-        char[] s = String.valueOf(num).toCharArray();
-        int minv = Integer.MAX_VALUE, maxv = Integer.MIN_VALUE;
+        int a = Integer.MAX_VALUE, b = Integer.MIN_VALUE;
         for (int i = 0; i <= 9; i++) {
             for (int j = 0; j <= 9; j++) {
-                char[] t = get(s.clone(), i, j);
-                if (t[0] != '0') {
-                    int n = Integer.parseInt(String.valueOf(t));
-                    minv = Math.min(minv, n);
-                    maxv = Math.max(maxv, n);
+                char[] s = get(num, i, j);
+                if (s[0] != '0') {
+                    int x = Integer.parseInt(String.valueOf(s));
+                    a = Math.min(a, x);
+                    b = Math.max(b, x);
                 }
             }
         }
-        return maxv - minv;
+        return b - a;
     }
 
-    private char[] get(char[] s, int x, int y) {
-        for (int i = 0; i < s.length; i++) {
-            if (s[i] - '0' == x) s[i] = (char)(y + '0');
+    private char[] get(int num, int x, int y) {
+        char[] s = String.valueOf(num).toCharArray();
+        int n = s.length;
+        for (int i = 0; i < n; i++) {
+            int u = s[i] - '0';
+            if (u == x) s[i] = (char)('0' + y);
         }
         return s;
+    }
+
+    // S2
+    // time = O(n), space = O(n)
+    public int maxDiff2(int num) {
+        int x = get(num, 9), y = get(num, 1), z = get(num, 0);
+        return x - Math.min(y, z);
+    }
+
+    private int get(int x, int v) {
+        char[] s = String.valueOf(x).toCharArray();
+        int n = s.length, t = -1;
+        int e = s[0] - '0';
+        for (int i = 0; i < n; i++) {
+            int u = s[i] - '0';
+            if (u != v) {
+                if (v == 0 && u == e) continue;
+                if (t == -1) t = u;
+                if (u == t) s[i] = (char)('0' + v);
+            }
+        }
+        return Integer.parseInt(String.valueOf(s));
     }
 }

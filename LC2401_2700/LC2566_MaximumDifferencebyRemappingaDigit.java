@@ -29,21 +29,19 @@ public class LC2566_MaximumDifferencebyRemappingaDigit {
      */
     // time = O(n), space = O(n)
     public int minMaxDifference(int num) {
-        char[] chars = String.valueOf(num).toCharArray();
-        int n = chars.length;
-        char c = '\0';
+        return get(num, 9) - get(num, 0);
+    }
+
+    private int get(int x, int v) {
+        char[] s = String.valueOf(x).toCharArray();
+        int n = s.length, t = -1;
         for (int i = 0; i < n; i++) {
-            if (chars[i] == '9') continue;
-            else if (c == '\0') c = chars[i];
-            if (chars[i] == c) chars[i] = '9';
+            int u = s[i] - '0';
+            if (u != v) {
+                if (t == -1) t = u;
+                if (u == t) s[i] = (char)(v + '0');
+            }
         }
-        int max = Integer.parseInt(String.valueOf(chars));
-        chars = String.valueOf(num).toCharArray();
-        c = chars[0];
-        for (int i = 0; i < n; i++) {
-            if (chars[i] == c) chars[i] = '0';
-        }
-        int min = Integer.parseInt(String.valueOf(chars));
-        return max - min;
+        return Integer.parseInt(String.valueOf(s));
     }
 }

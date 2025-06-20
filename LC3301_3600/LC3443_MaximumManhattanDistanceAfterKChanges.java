@@ -31,33 +31,50 @@ public class LC3443_MaximumManhattanDistanceAfterKChanges {
      * @param k
      * @return
      */
+    // S1
     // time = O(n), space = O(1)
-    String d = "NESW", s;
-    int k;
+    String dir = "NSEW";
     public int maxDistance(String s, int k) {
-        this.s = s;
-        this.k = k;
         int res = 0;
-        res = Math.max(res, work(0, 1));
-        res = Math.max(res, work(0, 3));
-        res = Math.max(res, work(2, 1));
-        res = Math.max(res, work(2, 3));
+        for (int i = 0; i < 2; i++) {
+            for (int j = 2; j < 4; j++) {
+                res = Math.max(res, get(s, k, i, j));
+            }
+        }
         return res;
     }
 
-    private int work(int a, int b) {
-        int n = s.length(), t = 0, res = 0, cnt = 0;
+    private int get(String s, int k, int a, int b) {
+        int n = s.length(), res = 0;
+        for (int i = 0, v = 0; i < n; i++) {
+            char c = s.charAt(i);
+            int x = dir.indexOf(c);
+            if (x == a || x == b) v++;
+            else {
+                if (k == 0) v--;
+                else {
+                    k--;
+                    v++;
+                }
+            }
+            res = Math.max(res, v);
+        }
+        return res;
+    }
+
+    // S2
+    // time = O(n), space = O(1)
+    public int maxDistance2(String s, int k) {
+        int[] cnt = new int[4];
+        int n = s.length(), res = 0;
+        String dir = "NSEW";
         for (int i = 0; i < n; i++) {
             char c = s.charAt(i);
-            int idx = d.indexOf(c);
-            if (idx == a || idx == b) t++;
-            else {
-                if (cnt < k) {
-                    cnt++;
-                    t++;
-                } else t--;
-            }
-            res = Math.max(res, t);
+            int u = dir.indexOf(c);
+            cnt[u]++;
+            int t = Math.abs(cnt[0] - cnt[1]) + Math.abs(cnt[2] - cnt[3]);
+            int d = t + Math.min(2 * k, i + 1 - t);
+            res = Math.max(res, d);
         }
         return res;
     }
