@@ -30,23 +30,14 @@ public class LC2138_DivideaStringIntoGroupsofSizek {
      */
     // time = O(n), space = O(k)
     public String[] divideString(String s, int k, char fill) {
-        int n = s.length(), len = n % k == 0 ? n / k : n / k + 1;
-        String[] res = new String[len];
-        int start = 0;
-
-        for (int i = 0; i < len; i++) {
-            if (i < len - 1) {
-                res[i] = s.substring(start, start + k);
-                start += k;
-            } else {
-                if (n % k == 0) res[i] = s.substring(start, start + k);
-                else {
-                    StringBuilder sb = new StringBuilder();
-                    sb.append(s.substring(start));
-                    int diff = k - n % k;
-                    while (diff-- > 0) sb.append(fill);
-                    res[i] = sb.toString();
-                }
+        int n = s.length(), m = (n + k - 1) / k;
+        String[] res = new String[m];
+        for (int i = 0, j = 0; i < n; i += k, j++) {
+            if (i + k < n) res[j] = s.substring(i, i + k);
+            else {
+                res[j] = s.substring(i);
+                int x = k - res[j].length();
+                res[j] += String.valueOf(fill).repeat(x);
             }
         }
         return res;

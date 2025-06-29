@@ -21,26 +21,17 @@ public class LC1498_NumberofSubsequencesThatSatisfytheGivenSumCondition {
      */
     // time = O(nlogn), space = O(n)
     public int numSubseq(int[] nums, int target) {
-        // corner case
-        if (nums == null || nums.length == 0) return 0;
-
+        long mod = (long)(1e9 + 7), res = 0;
         Arrays.sort(nums);
-
         int n = nums.length;
-        long M = (long)(1e9 + 7);
-
-        long[] power = new long[n + 1];
-        Arrays.fill(power, 1);
-        for (int i = 1; i <= n; i++) {
-            power[i] = power[i - 1] * 2 % M;
-        }
-
-        int j = n - 1;
-        long res = 0;
-        for (int i = 0; i < n; i++) {
-            while (j >= i && nums[i] + nums[j] > target) j--;
-            if (j < i) break;
-            res = (res + power[j - i]) % M;
+        long[] p = new long[n];
+        p[0] = 1;
+        for (int i = 1; i < n; i++) p[i] = p[i - 1] * 2 % mod;
+        for (int i = 0, j = n - 1; i < n; i++) {
+            while (i <= j && nums[i] + nums[j] > target) j--;
+            if (i <= j && nums[i] + nums[j] <= target) {
+                res = (res + p[j - i]) % mod;
+            }
         }
         return (int)res;
     }

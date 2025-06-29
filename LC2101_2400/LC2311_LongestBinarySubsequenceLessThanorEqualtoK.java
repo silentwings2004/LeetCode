@@ -28,6 +28,7 @@ public class LC2311_LongestBinarySubsequenceLessThanorEqualtoK {
      * @param k
      * @return
      */
+    // S1
     // time = O(n), space = O(n)
     public int longestSubsequence(String s, int k) {
         int n = s.length(), zero = 0;
@@ -46,6 +47,25 @@ public class LC2311_LongestBinarySubsequenceLessThanorEqualtoK {
             else count++;
         }
         return zero + count;
+    }
+
+    // S2
+    // time = O(n), space = O(1)
+    public int longestSubsequence2(String s, int k) {
+        int n = s.length(), res = 0;
+        for (int i = 0; i < n; i++) {
+            if (s.charAt(i) == '0') res++;
+        }
+
+        long x = 0;
+        for (int i = n - 1; i >= 0; i--) {
+            if (s.charAt(i) == '1') {
+                x |= 1L << (n - 1 - i);
+                if (x <= k) res++;
+                else break;
+            }
+        }
+        return res;
     }
 }
 /**

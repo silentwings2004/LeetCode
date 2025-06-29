@@ -78,49 +78,45 @@ public class LC2014_LongestSubsequenceRepeatedkTimes {
 
     // S2: DFS
     // time = O(n), space = O(n)
-    private String ans = "";
+    String ans;
     public String longestSubsequenceRepeatedK2(String s, int k) {
-        int[] count = new int[26];
-        for (char ch : s.toCharArray()) {
-            count[ch - 'a']++;
+        ans = "";
+        int[] cnt = new int[26];
+        for (int i = 0; i < s.length(); i++) {
+            int u = s.charAt(i) - 'a';
+            cnt[u]++;
         }
-
-        String t = "";
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < 26; i++) {
-            if (count[i] >= k) {
-                t += (char)('a' + i);
-            }
+            if (cnt[i] >= k) sb.append((char)('a' + i));
         }
-
-        dfs(t, "", s, k);
+        dfs(sb, new StringBuilder(), s, k);
         return ans;
     }
 
-    private void dfs(String t, String temp, String s, int k) {
-        // base case
-        if (!checkOK(temp, s, k)) return;
+    private void dfs(StringBuilder sb1, StringBuilder sb2, String s, int k) {
+        if (!check(sb2, s, k)) return;
+        if (sb2.length() > ans.length() || sb2.length() == ans.length() && sb2.toString().compareTo(ans) > 0) {
+            ans = sb2.toString();
+        }
+        if (sb2.length() == 7) return;
 
-        if (temp.length() > ans.length() || temp.length() == ans.length() && temp.compareTo(ans) > 0) ans = temp;
-
-        if (temp.length() == 7) return;
-
-        for (char ch : t.toCharArray()) {
-            temp += ch;
-            dfs(t, temp, s, k);
-            temp = temp.substring(0, temp.length() - 1);
+        for (int i = 0; i < sb1.length(); i++) {
+            sb2.append(sb1.charAt(i));
+            dfs(sb1, sb2, s, k);
+            sb2.setLength(sb2.length() - 1);
         }
     }
 
-    private boolean checkOK(String temp, String s, int k) {
-        if (temp.length() == 0) return true;
-        int j = 0, round = 0;
-        for (int i = 0; i < s.length(); i++) {
-            if (s.charAt(i) != temp.charAt(j)) continue;
+    private boolean check(StringBuilder sb, String s, int k) {
+        if (sb.length() == 0) return true;
+        for (int i = 0, j = 0, r = 0; i < s.length(); i++) {
+            if (s.charAt(i) != sb.charAt(j)) continue;
             j++;
-            if (j == temp.length()) {
+            if (j == sb.length()) {
                 j = 0;
-                round++;
-                if (round == k) return true;
+                r++;
+                if (r == k) return true;
             }
         }
         return false;

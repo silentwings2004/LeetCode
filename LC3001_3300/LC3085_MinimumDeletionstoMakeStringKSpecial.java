@@ -58,17 +58,22 @@ public class LC3085_MinimumDeletionstoMakeStringKSpecial {
     public int minimumDeletions2(String word, int k) {
         int[] cnt = new int[26];
         int n = word.length();
-        for (int i = 0; i < n; i++) cnt[word.charAt(i) - 'a']++;
-        Arrays.sort(cnt);
-        int max_save = 0;
-        for (int i = 0; i < 26; i++) {
-            int s = 0, base = cnt[i];
-            for (int j = i; j < 26; j++) {
-                s += Math.min(cnt[j], cnt[i] + k);
-            }
-            max_save = Math.max(max_save, s);
+        for (int i = 0; i < n; i++) {
+            int u = word.charAt(i) - 'a';
+            cnt[u]++;
         }
-        return n - max_save;
+        Arrays.sort(cnt);
+        int res = n;
+        for (int i = 0, t = 0; i < 26; i++) {
+            int v = t;
+            for (int j = i + 1; j < 26; j++) {
+                if (cnt[j] - cnt[i] <= k) continue;
+                v += cnt[j] - cnt[i] - k;
+            }
+            res = Math.min(res, v);
+            t += cnt[i];
+        }
+        return res;
     }
 }
 /**
