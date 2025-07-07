@@ -37,6 +37,7 @@ public class LC3605_MinimumStabilityFactorofArray {
      * @param maxC
      * @return
      */
+    // S1: ST table
     // time = O(nlogn), space = O(n)
     int[][] f;
     public int minStable(int[] nums, int maxC) {
