@@ -24,26 +24,53 @@ public class LC3597_PartitionString {
      * @param s
      * @return
      */
-    // time = O(n), space = O(n)
+    // S1
+    // time = O(n * sqrt(n)), space = O(n)
     public List<String> partitionString(String s) {
         List<String> res = new ArrayList<>();
         int n = s.length();
         HashSet<String> set = new HashSet<>();
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < n; i++) {
-            StringBuilder sb = new StringBuilder();
-            boolean f = false;
-            for (int j = i; j < n; j++) {
-                sb.append(s.charAt(j));
-                String t = sb.toString();
-                if (set.add(t)) {
-                    res.add(t);
-                    f = true;
-                    i = j;
-                    break;
-                }
+            sb.append(s.charAt(i));
+            if (set.add(sb.toString())) {
+                res.add(sb.toString());
+                sb = new StringBuilder();
             }
-            if (!f) break;
         }
         return res;
     }
+
+    // S2: Trie
+    // time = O(n), space = O(n)
+    public List<String> partitionString2(String s) {
+        List<String> res = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        TrieNode root = new TrieNode(), p = root;
+        int n = s.length();
+        for (int i = 0; i < n; i++) {
+            char c = s.charAt(i);
+            sb.append(c);
+            int u = c - 'a';
+            if (p.next[u] == null) {
+                p.next[u] = new TrieNode();
+                res.add(sb.toString());
+                sb = new StringBuilder();
+                p = root;
+            } else p = p.next[u];
+        }
+        return res;
+    }
+
+    class TrieNode {
+        TrieNode[] next;
+        public TrieNode() {
+            this.next = new TrieNode[26];
+        }
+    }
 }
+/**
+ * 最坏情况 a aa aaa ...
+ * 1 + 2 + 3 + ... + k <= n
+ * (k + 1) * k / 2 <= n  => O(sqrt(n))
+ */

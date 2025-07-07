@@ -29,6 +29,7 @@ public class LC3598_LongestCommonPrefixBetweenAdjacentStringsAfterRemovals {
      * @param words
      * @return
      */
+    // S1
     // time = O(n), space = O(n)
     public int[] longestCommonPrefix(String[] words) {
         int n = words.length, m = n - 1;
@@ -60,4 +61,36 @@ public class LC3598_LongestCommonPrefixBetweenAdjacentStringsAfterRemovals {
         while (i < n && a.charAt(i) == b.charAt(i)) i++;
         return i;
     }
+
+    // S2
+    // time = O(n), space = O(n)
+    public int[] longestCommonPrefix2(String[] words) {
+        int n = words.length, m = n - 1;
+        if (n == 1) return new int[n];
+        int[] suf = new int[n];
+        for (int i = n - 2; i > 0; i--) {
+            suf[i] = Math.max(suf[i + 1], lcp(words[i], words[i + 1]));
+        }
+        int[] res = new int[n];
+        res[0] = suf[1];
+        int pre = 0;
+        for (int i = 1; i < n - 1; i++) {
+            res[i] = Math.max(pre, Math.max(lcp(words[i - 1], words[i + 1]), suf[i + 1]));
+            pre = Math.max(pre, lcp(words[i - 1], words[i]));
+        }
+        res[n - 1] = pre;
+        return res;
+    }
+
+    private int lcp(String a, String b) {
+        int n = Math.min(a.length(), b.length()), cnt = 0;
+        for (int i = 0; i < n; i++) {
+            if (a.charAt(i) != b.charAt(i)) break;
+            cnt++;
+        }
+        return cnt;
+    }
 }
+/**
+ * ref: LC238
+ */

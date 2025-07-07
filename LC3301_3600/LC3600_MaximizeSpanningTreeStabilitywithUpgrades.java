@@ -45,7 +45,7 @@ public class LC3600_MaximizeSpanningTreeStabilitywithUpgrades {
      * @param k
      * @return
      */
-    // time = O(nlogn), space = O(n)
+    // time = O((n + mlogn) * logU), space = O(n)
     public int maxStability(int n, int[][] edges, int k) {
         List<int[]> must = new ArrayList<>();
         List<int[]> opt = new ArrayList<>();
@@ -58,7 +58,7 @@ public class LC3600_MaximizeSpanningTreeStabilitywithUpgrades {
 
         UnionFind uf = new UnionFind(n);
         for (int[] e : must) {
-            if (!uf.merge(e[0], e[1])) return -1;
+            if (!uf.merge(e[0], e[1])) return -1; // 必选的边成环了
         }
         for (int[] e : opt) uf.merge(e[0], e[1]);
 
@@ -66,7 +66,7 @@ public class LC3600_MaximizeSpanningTreeStabilitywithUpgrades {
         for (int i = 0; i < n; i++) {
             if (uf.find(i) == i) cnt++;
         }
-        if (cnt > 1) return -1;
+        if (cnt > 1) return -1; // 图是不连通的
 
         int l = 1, r = 2 * maxs;
         while (l < r) {
@@ -142,4 +142,41 @@ public class LC3600_MaximizeSpanningTreeStabilitywithUpgrades {
             return size[find(x)];
         }
     }
+
+    // S2: Kruskal
+    // time = O(mlogm + n + mlogn), space = O(n)
+    public int maxStability2(int n, int[][] edges, int k) {
+        UnionFind uf = new UnionFind(n);
+        UnionFind uf2 = new UnionFind(n);
+        int mins = Integer.MAX_VALUE;
+        for (int[] e : edges) {
+            if (e[3] == 1) {
+                if (!uf.merge(e[0], e[1])) return -1; // 必选边成环
+                mins = Math.min(mins, e[2]);
+            }
+            uf2.merge(e[0], e[1]);
+        }
+        if (uf2.cc > 1) return -1; // 图不连通
+        if (uf.cc == 1) return mins; // 只需选必选边
+
+        // Kruskal
+        Arrays.sort(edges, (o1, o2) -> o2[2] - o1[2]);
+        List<Integer> q = new ArrayList<>();
+        for (int[] e : edges) {
+            if (e[3] == 0 && uf.merge(e[0], e[1])) q.add(e[2]);
+        }
+
+        int m = q.size();
+        int res = Math.min(mins, q.get(m - 1) * 2);
+        if (k < m) res = Math.min(res, q.get(m - k - 1));
+        return res;
+    }
 }
+/**
+ * 二分下界
+ * must = 1 ==> 并查集
+ * must = 0
+ * 1. s >= low
+ * 2. s < low
+ *    2 * s >= low
+ */

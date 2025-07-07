@@ -51,3 +51,6 @@ public class LC3599_PartitionArraytoMinimizeXOR {
         return (int)f[n][k];
     }
 }
+/**
+ * 划分型 DP
+ */
