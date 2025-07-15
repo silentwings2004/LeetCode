@@ -155,4 +155,6 @@ public class LC1900_TheEarliestandLatestRoundsWherePlayersCompete {
  *
  * [xxxx] a [xxx] bb (xxx M xxx b) [xxx] aa [xxxx]
  * => dp((n+1)/2,0,1+z+1)  让a变第1个，让b变第1个
+ *
+ * f(k,x,y):当前共 k 个，且 a 前面有 x 个人, b 后面有 y 个人，是否可达
  */

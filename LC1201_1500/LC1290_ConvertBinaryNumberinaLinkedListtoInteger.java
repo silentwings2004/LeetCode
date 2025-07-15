@@ -18,40 +18,12 @@ public class LC1290_ConvertBinaryNumberinaLinkedListtoInteger {
      * @param head
      * @return
      */
-    // S1
     // time = O(n), space = O(1)
     public int getDecimalValue(ListNode head) {
-        ListNode cur = head;
-        int num = cur.val;
-        while (cur.next != null) {
-            num = num * 2 + cur.next.val;
-            cur = cur.next;
-        }
-        return num;
-    }
-
-    // S2: reverse LinkedList
-    // time = O(n), space = O(1)
-    public int getDecimalValue2(ListNode head) {
-        int res = 0, count = 0;
-        ListNode cur = reverse(head);
-
-        while (cur != null) {
-            if (cur.val == 1) res += (int) Math.pow(2, count);
-            cur = cur.next;
-            count++;
+        int res = 0;
+        for (ListNode p = head; p != null; p = p.next) {
+            res = res * 2 + p.val;
         }
         return res;
-    }
-
-    private ListNode reverse(ListNode head) {
-        ListNode cur = head, prev = null;
-        while (cur != null) {
-            ListNode next = cur.next;
-            cur.next = prev;
-            prev = cur;
-            cur = next;
-        }
-        return prev;
     }
 }
