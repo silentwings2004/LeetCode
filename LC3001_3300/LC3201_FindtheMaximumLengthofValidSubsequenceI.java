@@ -27,6 +27,7 @@ public class LC3201_FindtheMaximumLengthofValidSubsequenceI {
      * @param nums
      * @return
      */
+    // S1
     // time = O(n), space = O(n)
     public int maximumLength(int[] nums) {
         int n = nums.length;
@@ -53,6 +54,44 @@ public class LC3201_FindtheMaximumLengthofValidSubsequenceI {
             if (r == 0) last0 = i;
             else last1 = i;
             v2 = Math.max(v2, f[i]);
+        }
+        return Math.max(v1, v2);
+    }
+
+    // S2
+    // time = O(n), space = O(1)
+    public int maximumLength2(int[] nums) {
+        return Math.max(helper(nums, 0), helper(nums, 1));
+    }
+
+    private int helper(int[] nums, int v) {
+        int n = nums.length, v1 = 0, v2 = 0;
+        for (int i = 0, last = -1; i < n; i++) {
+            if (last == -1) {
+                if (nums[i] % 2 == 0) {
+                    last = nums[i] % 2;
+                    v1++;
+                }
+            } else {
+                if ((last + nums[i]) % 2 == v) {
+                    last = nums[i] % 2;
+                    v1++;
+                }
+            }
+        }
+
+        for (int i = 0, last = -1; i < n; i++) {
+            if (last == -1) {
+                if (nums[i] % 2 == 1) {
+                    last = nums[i] % 2;
+                    v2++;
+                }
+            } else {
+                if ((last + nums[i]) % 2 == v) {
+                    last = nums[i] % 2;
+                    v2++;
+                }
+            }
         }
         return Math.max(v1, v2);
     }

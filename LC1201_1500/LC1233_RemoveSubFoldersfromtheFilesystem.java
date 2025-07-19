@@ -77,6 +77,30 @@ public class LC1233_RemoveSubFoldersfromtheFilesystem {
             this.isEnd = false;
         }
     }
+
+    // S3: 分组循环
+    // time = O(n * m), space = O(n * m)
+    public List<String> removeSubfolders3(String[] folder) {
+        List<String> res = new ArrayList<>();
+        HashSet<String> set = new HashSet<>();
+        for (String s : folder) set.add(s);
+        for (String s : folder) {
+            int n = s.length();
+            boolean f = true;
+            for (int i = 0; i < n; i++) {
+                int j = i;
+                while (j < n && s.charAt(j) != '/') j++;
+                String t = s.substring(0, j);
+                if (!t.equals(s) && set.contains(t)) {
+                    f = false;
+                    break;
+                }
+                i = j;
+            }
+            if (f) res.add(s);
+        }
+        return res;
+    }
 }
 /**
  * 只要满足前者一定是后者的前缀，但要以'/'结尾 => 给每个字符串最后加个'/'即可直接判断前缀
