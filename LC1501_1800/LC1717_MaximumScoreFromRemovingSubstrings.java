@@ -99,6 +99,34 @@ public class LC1717_MaximumScoreFromRemovingSubstrings {
         }
         return res;
     }
+
+    // S3
+    // time = O(n), space = O(n)
+    public int maximumGain3(String s, int x, int y) {
+        int n = s.length(), res = 0;
+        char[] stk = new char[n + 1];
+        int tt = 0;
+        String a = x >= y ? "ab" : "ba";
+        String b = x >= y ? "ba" : "ab";
+        for (int i = 0; i < n; i++) {
+            stk[++tt] = s.charAt(i);
+            if (tt >= 2 && stk[tt] == a.charAt(1) && stk[tt - 1] == a.charAt(0)) {
+                tt -= 2;
+                res += Math.max(x, y);
+            }
+        }
+        s = new String(stk, 0, tt + 1);
+        stk = new char[n + 1];
+        tt = 0;
+        for (int i = 0; i < s.length(); i++) {
+            stk[++tt] = s.charAt(i);
+            if (tt >= 2 && stk[tt] == b.charAt(1) && stk[tt - 1] == b.charAt(0)) {
+                res += Math.min(x, y);
+                tt -= 2;
+            }
+        }
+        return res;
+    }
 }
 
 /**
