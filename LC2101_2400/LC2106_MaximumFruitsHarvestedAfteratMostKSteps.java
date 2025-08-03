@@ -152,6 +152,53 @@ public class LC2106_MaximumFruitsHarvestedAfteratMostKSteps {
         }
         return res;
     }
+
+    // S4: Two pointers
+    // time = O(n), space = O(n)
+    public int maxTotalFruits4(int[][] fruits, int startPos, int k) {
+        int n = fruits.length;
+        int[] pre = new int[n + 1];
+        for (int i = 1; i <= n; i++) pre[i] = pre[i - 1] + fruits[i - 1][1];
+        int idx = n - 1;
+        for (int i = 0; i < n; i++) {
+            if (fruits[i][0] > startPos) {
+                idx = i - 1;
+                break;
+            }
+        }
+
+        int tl = pre[idx + 1], tr = pre[n] - pre[idx], res = 0;
+
+        // left [0, idx], right [idx + 1, n - 1]
+        for (int i = idx, j = n - 1, vr = tr; i >= 0; i--) {
+            int dl = startPos - fruits[i][0];
+            if (dl > k) break;
+            int vl = pre[idx + 1] - pre[i];
+            int dr = k - dl * 2;
+            if (dr < 0) {
+                res = Math.max(res, vl);
+                continue;
+            }
+            while (j > idx && fruits[j][0] - startPos > dr) vr -= fruits[j--][1];
+            res = Math.max(res, vl + vr);
+        }
+
+
+
+        for (int i = idx + 1, j = 0, vl = tl; i < n; i++) {
+            int dr = fruits[i][0] - startPos;
+            if (dr > k) break;
+            int vr = pre[i + 1] - pre[idx];
+            int dl = k - dr * 2;
+            if (dl < 0) {
+                res = Math.max(res, vr);
+                continue;
+            }
+            while (j <= idx && startPos - fruits[j][0] > dl) vl -= fruits[j++][1];
+            res = Math.max(res, vl + vr);
+        }
+        return res;
+    }
 }
 /**
  * 我们只会转一次方向，然后一路走到头，不可能再回头
