@@ -35,8 +35,24 @@ public class LC3635_EarliestFinishTimeforLandandWaterRidesII {
      * @param waterDuration
      * @return
      */
-    // time = O(nlogn + mlogm), space = O(n + m)
+    // S1
+    // time = O(n + m), space = O(1)
     public int earliestFinishTime(int[] landStartTime, int[] landDuration, int[] waterStartTime, int[] waterDuration) {
+        int a = work(landStartTime, landDuration, waterStartTime, waterDuration);
+        int b = work(waterStartTime, waterDuration, landStartTime, landDuration);
+        return Math.min(a, b);
+    }
+
+    private int work(int[] a, int[] b, int[] c, int[] d) {
+        int mf = Integer.MAX_VALUE, res = Integer.MAX_VALUE;
+        for (int i = 0; i < a.length; i++) mf = Math.min(mf, a[i] + b[i]);
+        for (int i = 0; i < c.length; i++) res = Math.min(res, Math.max(c[i], mf) + d[i]);
+        return res;
+    }
+
+    // S2
+    // time = O(nlogn + mlogm), space = O(n + m)
+    public int earliestFinishTime2(int[] landStartTime, int[] landDuration, int[] waterStartTime, int[] waterDuration) {
         int a = helper(landStartTime, landDuration, waterStartTime, waterDuration);
         int b = helper(waterStartTime, waterDuration, landStartTime, landDuration);
         return Math.min(a, b);

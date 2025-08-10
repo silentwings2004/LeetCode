@@ -28,28 +28,23 @@ public class LC808_SoupServings {
      * @return
      */
     // S1: dfs
-    // time = O(1), space = O(1)
-    HashMap<String, Double> map;
+    // time = O(min((n, U)/L)^2), space = O((min(n,U)/L)^2)
+    double[][] f;
     public double soupServings(int n) {
-        map = new HashMap<>();
-        if (n > 4800) return 1;
+        if (n >= 4451) return 1;
+        n = (n + 24) / 25;
+        f = new double[n + 1][n + 1];
         return dfs(n, n);
     }
 
     private double dfs(int a, int b) {
-        if (a <= 0 && b > 0) return 1;
         if (a <= 0 && b <= 0) return 0.5;
-        if (a > 0 && b <= 0) return 0;
-
-        String key = a + "#" + b;
-        if (map.containsKey(key)) return map.get(key);
-
-        double val1 = dfs(a - 100, b);
-        double val2 = dfs(a - 75, b - 25);
-        double val3 = dfs(a - 50, b - 50);
-        double val4 = dfs(a - 25, b - 75);
-        map.put(key, 0.25 * (val1 + val2 + val3 + val4));
-        return map.get(key);
+        if (a <= 0) return 1.0;
+        if (b <= 0) return 0;
+        if (f[a][b] == 0) {
+            f[a][b] = 0.25 * (dfs(a - 4, b) + dfs(a - 3, b - 1) + dfs(a - 2, b - 2) + dfs(a - 1, b - 3));
+        }
+        return f[a][b];
     }
 
     // S2: DP

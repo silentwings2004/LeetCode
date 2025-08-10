@@ -31,6 +31,7 @@ public class LC3634_MinimumRemovalstoBalanceArray {
      * @param k
      * @return
      */
+    // S1
     // time = O(nlogn), space = O(logn)
     public int minRemoval(int[] nums, int k) {
         Arrays.sort(nums);
@@ -47,5 +48,17 @@ public class LC3634_MinimumRemovalstoBalanceArray {
             else r = mid - 1;
         }
         return nums[r] <= t ? r : r + 1;
+    }
+
+    // S2
+    // time = O(nlogn), space = O(logn)
+    public int minRemoval2(int[] nums, int k) {
+        Arrays.sort(nums);
+        int n = nums.length, ms = 0;
+        for (int i = 0, l = 0; i < n; i++) {
+            while (1L * nums[l] * k < nums[i]) l++;
+            ms = Math.max(ms, i - l + 1);
+        }
+        return n - ms;
     }
 }

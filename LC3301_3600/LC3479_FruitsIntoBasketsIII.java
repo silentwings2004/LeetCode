@@ -89,4 +89,38 @@ public class LC3479_FruitsIntoBasketsIII {
             this.r = r;
         }
     }
+
+    // S2: 分块
+    // time = O(n^(3/2)), space = O(n^(1/2))
+    public int numOfUnplacedFruits2(int[] fruits, int[] baskets) {
+        int n = baskets.length;
+        int m = (int)Math.sqrt(n);
+        int k = (n + m - 1) / m; // total k sections, each section has length of m
+        int[] a = new int[k];
+        for (int i = 0; i < n; i++) {
+            a[i / m] = Math.max(a[i / m], baskets[i]);
+        }
+
+        int res = 0;
+        for (int x : fruits) {
+            int unset = 1;
+            for (int y = 0; y < k; y++) {
+                if (a[y] < x) continue;
+                boolean f = false;
+                a[y] = 0;
+                for (int i = 0; i < m; i++) {
+                    int pos = y * m + i;
+                    if (pos < n && baskets[pos] >= x && !f) {
+                        f = true;
+                        baskets[pos] = 0;
+                    }
+                    if (pos < n) a[y] = Math.max(a[y], baskets[pos]);
+                }
+                unset = 0;
+                break;
+            }
+            res += unset;
+        }
+        return res;
+    }
 }

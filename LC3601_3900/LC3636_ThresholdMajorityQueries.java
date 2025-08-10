@@ -26,6 +26,7 @@ public class LC3636_ThresholdMajorityQueries {
      * @param queries
      * @return
      */
+    // S1
     // time = O(mlogm), space = O(m)
     public int[] subarrayMajority(int[] nums, int[][] queries) {
         int n = nums.length, m = queries.length;
@@ -70,4 +71,72 @@ public class LC3636_ThresholdMajorityQueries {
         }
         return res;
     }
+
+    // S2: Mo's algorithm
+    HashMap<Integer, Integer> map;
+    int maxc, minv;
+    public int[] subarrayMajority2(int[] nums, int[][] queries) {
+        map = new HashMap<>();
+        int n = nums.length, m = queries.length;
+        int[] res = new int[m];
+        int sz = (int)Math.ceil(n / Math.sqrt(m * 2));
+
+        List<int[]> qs = new ArrayList<>(); // {bid, l, r, w, i}
+        for (int i = 0; i < m; i++) {
+            int l = queries[i][0], r = queries[i][1] + 1, w = queries[i][2]; // 左闭右开
+            if (r - l > sz) { // 大区间离线 (l, r 不在一个块中)
+                qs.add(new int[]{l / sz, l, r, w, i});
+                continue;
+            }
+
+            // 小区间暴力
+            for (int j = l; j < r; j++) add(nums[j]);
+            res[i] = maxc >= w ? minv : -1;
+
+            map.clear();
+            maxc = 0;
+        }
+
+        Collections.sort(qs, (o1, o2) -> o1[0] != o2[0] ? o1[0] - o2[0] : o1[2] - o2[2]);
+        int r = 0;
+        for (int i = 0; i < qs.size(); i++) {
+            int[] q = qs.get(i);
+            int l0 = (q[0] + 1) * sz;
+            if (i == 0 || q[0] > qs.get(i - 1)[0]) { // 遍历到一个新的块
+                r = l0; // 右端点移动的起点
+                map.clear();
+                maxc = 0;
+            }
+
+            while (r < q[2]) add(nums[r++]);
+
+            int tc = maxc, tv = minv;
+            for (int j = q[1]; j < l0; j++) add(nums[j]);
+            res[q[4]] = maxc >= q[3] ? minv : -1;
+
+            // 回滚
+            maxc = tc;
+            minv = tv;
+            for (int j = q[1]; j < l0; j++) {
+                map.put(nums[j], map.get(nums[j]) - 1);
+                if (map.get(nums[j]) == 0) map.remove(nums[j]);
+            }
+        }
+        return res;
+    }
+
+    private void add(int x) {
+        map.put(x, map.getOrDefault(x, 0) + 1);
+        int cnt = map.get(x);
+        if (cnt > maxc) {
+            maxc = cnt;
+            minv = x;
+        } else if (cnt == maxc) minv = Math.min(minv, x);
+    }
 }
+/**
+ * 莫队算法 回滚莫队
+ * O(nq) -> O(n*sqrt(q))，少了个 sqrt(q)
+ * 分块 => 按右端点排序
+ * 左端点抖动，右端点右移
+ */
