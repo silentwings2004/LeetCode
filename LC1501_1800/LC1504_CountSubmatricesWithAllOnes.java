@@ -1,6 +1,6 @@
 package LC1501_1800;
 import java.util.*;
-public class LC1504_CountSubmatricesWithAllOnes {
+public class    LC1504_CountSubmatricesWithAllOnes {
     /**
      * Given an m x n binary matrix mat, return the number of submatrices that have all ones.
      *

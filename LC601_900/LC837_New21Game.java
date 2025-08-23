@@ -33,12 +33,11 @@ public class LC837_New21Game {
      * @return
      */
     // time = O(n), space = O(n)
-    final int N = 20010;
     public double new21Game(int n, int k, int maxPts) {
         if (k == 0) return 1;
-        double[] f = new double[N];
+        double[] f = new double[n + maxPts];
         for (int i = k; i <= n; i++) f[i] = 1;
-        for (int i = 1; i <= maxPts; i++) f[k - 1] += f[k - 1 + i] / maxPts;
+        for (int i = 1; i <= maxPts; i++) f[k - 1] += f[k + i - 1] / maxPts;
         for (int i = k - 2; i >= 0; i--) f[i] = f[i + 1] + (f[i + 1] - f[i + maxPts + 1]) / maxPts;
         return f[0];
     }

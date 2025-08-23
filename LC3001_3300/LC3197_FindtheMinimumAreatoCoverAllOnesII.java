@@ -89,9 +89,103 @@ public class LC3197_FindtheMinimumAreatoCoverAllOnesII {
         }
         return f;
     }
+
+    // S2
+    // time = O(m^2 * n^2), space = O(m * n)
+    public int minimumSum2(int[][] grid) {
+        int m = grid.length, n = grid[0].length;
+        int res = Integer.MAX_VALUE;
+        for (int i = 1; i < m; i++) {
+            for (int j = i + 1; j < m; j++) {
+                int A1 = process(grid, 0, 0, i - 1, n - 1);
+                int A2 = process(grid, i, 0, j - 1, n - 1);
+                int A3 = process(grid, j, 0, m - 1, n - 1);
+                res = Math.min(A1 + A2 + A3, res);
+            }
+        }
+
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                int A1 = process(grid, 0, 0, i - 1, j - 1);
+                int A2 = process(grid, 0, j, i - 1, n - 1);
+                int A3 = process(grid, i, 0, m - 1, n - 1);
+                res = Math.min(A1 + A2 + A3, res);
+            }
+        }
+
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                int A1 = process(grid, 0, 0, i - 1, n - 1);
+                int A2 = process(grid, i, 0, m - 1, j - 1);
+                int A3 = process(grid, i, j, m - 1, n - 1);
+                res = Math.min(A1 + A2 + A3, res);
+            }
+        }
+
+        for (int i = 1; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                int A1 = process(grid, 0, 0, m - 1, i - 1);
+                int A2 = process(grid, 0, i, m - 1, j - 1);
+                int A3 = process(grid, 0, j, m - 1, n - 1);
+                res = Math.min(A1 + A2 + A3, res);
+            }
+        }
+
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                int A1 = process(grid, 0, 0, m - 1, j - 1);
+                int A2 = process(grid, 0, j, i - 1, n - 1);
+                int A3 = process(grid, i, j, m - 1, n - 1);
+                res = Math.min(A1 + A2 + A3, res);
+            }
+        }
+
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                int A1 = process(grid, 0, 0, i - 1, j - 1);
+                int A2 = process(grid, i, 0, m - 1, j - 1);
+                int A3 = process(grid, 0, j, m - 1, n - 1);
+                res = Math.min(A1 + A2 + A3, res);
+            }
+        }
+        return res;
+    }
+
+    private int process(int[][] grid, int a, int b, int c, int d) {
+        if (a > c || b > d) return Integer.MAX_VALUE / 3;
+        int l = Integer.MAX_VALUE, r = Integer.MIN_VALUE, u = Integer.MAX_VALUE, v = Integer.MIN_VALUE;
+        for (int i = a; i <= c; i++) {
+            for (int j = b; j <= d; j++) {
+                if (grid[i][j] == 0) continue;
+                l = Math.min(l, j);
+                r = Math.max(r, j);
+                u = Math.min(u, i);
+                v = Math.max(v, i);
+            }
+        }
+        if (v >= u && r >= l) return (v - u + 1) * (r - l + 1);
+        return Integer.MAX_VALUE / 3;
+    }
 }
 /**
  * 2个矩形怎么做？
  * 3个矩形能否变成2个矩形？
  * 4个矩形怎么做？只能 回溯 + 暴搜!
+ * 事实上将一个矩阵分成三个互不相交的子矩形，只有如下六种形式：
+ *         1.        2.      3.
+ *
+ *         ┌－┐      ┌┐┌┐    ┌－┐
+ *         └－┘      └┘└┘    └－┘
+ *         ┌－┐      ┌－┐    ┌┐┌┐
+ *         └－┘      └－┘    └┘└┘
+ *         ┌－┐
+ *         └－┘
+ *
+ *         4.       5.      6.
+ *         ┌┐┌┐┌┐   ┌ ┐┌┐    ┌┐┌ ┐
+ *         └┘└┘└┘   │ │└┘    └┘│ │
+ *                  │ │┌┐    ┌┐│ │
+ *                  └ ┘└┘    └┘└ ┘
+ * 于每种形式，只有两条分割线。我们可以用o(MN)的时间遍历分割线的位置，就可以确定三个子矩阵的边界。
+ * 对于每一个子矩阵，我们再遍历其中的元素，确定包含所有元素1的最小矩阵即可（同3135）。
  */
