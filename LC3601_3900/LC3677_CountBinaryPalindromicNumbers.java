@@ -23,6 +23,7 @@ public class LC3677_CountBinaryPalindromicNumbers {
      * @param n
      * @return
      */
+    // S1: 二分
     // time = O(logn), space = O(1)
     public int countBinaryPalindromes(long n) {
         if (n == 0) return 1;
@@ -54,5 +55,22 @@ public class LC3677_CountBinaryPalindromicNumbers {
             t >>= 1;
         }
         return v <= n;
+    }
+
+    // S2
+    // time = O(logn), space = O(1)
+    public int countBinaryPalindromes2(long n) {
+        if (n == 0) return 1;
+        int m = 64 - Long.numberOfLeadingZeros(n);
+        int res = 1;
+        for (int i = 1; i < m; i++) res += 1 << ((i - 1) / 2);
+        for (int i = m - 2; i >= m / 2; i--) {
+            if ((n >> i & 1) == 1) res += 1 << (i - m / 2);
+        }
+
+        long pal = n >> (m / 2);
+        for (long v = pal >> (m % 2); v > 0; v /= 2) pal = pal * 2 + v % 2;
+        if (pal <= n) res++;
+        return res;
     }
 }

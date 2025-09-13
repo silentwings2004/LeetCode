@@ -33,29 +33,21 @@ public class LC3676_CountBowlSubarrays {
     // time = O(n), space = O(n)
     public long bowlSubarrays(int[] nums) {
         int n = nums.length;
-        int[] l = new int[n], r = new int[n];
-        Arrays.fill(l, -1);
-        Arrays.fill(r, n);
         int[] stk = new int[n + 1];
         int tt = 0;
-        for (int i = 0; i < n; i++) {
-            while (tt > 0 && nums[stk[tt]] < nums[i]) tt--;
-            if (tt > 0) l[i] = stk[tt];
-            stk[++tt] = i;
-        }
-
-        stk = new int[n + 1];
-        tt = 0;
-        for (int i = n - 1; i >= 0; i--) {
-            while (tt > 0 && nums[stk[tt]] < nums[i]) tt--;
-            if (tt > 0) r[i] = stk[tt];
-            stk[++tt] = i;
-        }
-
         long res = 0;
         for (int i = 0; i < n; i++) {
-            if (l[i] != -1 && r[i] != n) res++;
+            while (tt > 0 && nums[stk[tt]] < nums[i]) {
+                if (i - stk[tt] > 1) res++;
+                tt--;
+            }
+            if (tt > 0 && i - stk[tt] > 1) res++;
+            stk[++tt] = i;
         }
         return res;
     }
 }
+/**
+ * 对于每个右端点 r，我们只需要找 nums[r] 左侧最近的大于等于 nums[r] 的数的下标 l。
+ * 如果 l 存在且 i−l+1≥3，那么找到了一个合法子数组，把答案加一。
+ */
