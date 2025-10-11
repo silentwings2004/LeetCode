@@ -54,5 +54,4 @@ public class LC1039_MinimumScoreTriangulationofPolygon {
  * 集合：所有(i,j)的划分方案的集合
  * 属性：权值的最小值
  * 状态计算：以(i-j)这条边属于哪个三角形来分类，可以分成j-i-1类
- *
  */

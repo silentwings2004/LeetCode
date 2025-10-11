@@ -66,4 +66,25 @@ public class LC3694_DistinctPointsReachableAfterSubstringRemoval {
         if (c == 'R') x++;
         return new int[]{x, y};
     }
+
+    // S2
+    // time = O(n - k), space = O(n - k)
+    public int distinctPoints2(String s, int k) {
+        int n = s.length();
+        int x = 0, y = 0;
+        HashSet<Long> set = new HashSet<>();
+        set.add((1L * n) << 20 | n);
+        int[][] dirs = new int[128][];
+        dirs['L'] = new int[]{-1, 0};
+        dirs['R'] = new int[]{1, 0};
+        dirs['D'] = new int[]{0, -1};
+        dirs['U'] = new int[]{0, 1};
+        for (int i = k; i < n; i++) {
+            char c1 = s.charAt(i), c2 = s.charAt(i - k);
+            x += dirs[c1][0] - dirs[c2][0];
+            y += dirs[c1][1] - dirs[c2][1];
+            set.add((1L * (x + n)) << 20 | (y + n));
+        }
+        return set.size();
+    }
 }

@@ -30,6 +30,7 @@ public class LC3693_ClimbingStairsII {
      * @param costs
      * @return
      */
+    // S1
     // time = O(n), space = O(n)
     public int climbStairs(int n, int[] costs) {
         int[] f = new int[n + 1];
@@ -42,5 +43,18 @@ public class LC3693_ClimbingStairsII {
             if (i >= 3) f[i] = Math.min(f[i], f[i - 3] + costs[i - 1] + 9);
         }
         return f[n];
+    }
+
+    // S2
+    // time = O(n), space = O(1)
+    public int climbStairs2(int n, int[] costs) {
+        int f0 = 0, f1 = 0, f2 = 0;
+        for (int x : costs) {
+            int nf = Math.min(Math.min(f0 + 9, f1 + 4), f2 + 1) + x;
+            f0 = f1;
+            f1 = f2;
+            f2 = nf;
+        }
+        return f2;
     }
 }
