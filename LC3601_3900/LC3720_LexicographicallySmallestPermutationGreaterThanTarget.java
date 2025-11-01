@@ -69,3 +69,8 @@ public class LC3720_LexicographicallySmallestPermutationGreaterThanTarget {
         return "";
     }
 }
+/**
+ * 从右往左思考 --> 刚刚好大于
+ * s = "abc", t = "bba" -> bb?
+ * t'= b??
+ */
