@@ -32,6 +32,7 @@ public class LC3733_MinimumTimetoCompleteAllDeliveries {
      * @param r
      * @return
      */
+    // S1
     // time = O(logn), space = O(1)
     public long minimumTime(int[] d, int[] r) {
         long left = 0, right = (long)1E18;
@@ -57,4 +58,20 @@ public class LC3733_MinimumTimetoCompleteAllDeliveries {
         if (a == 0 || b == 0) return 0;
         return a / gcd(a, b) * b;
     }
+
+    // S2: Math
+    // time = O(log(max(r1, r2)), space = O(1)
+    public long minimumTime2(int[] d, int[] r) {
+        return Math.max(Math.max(f(d[0], r[0]), f(d[1], r[1])), f(d[0] + d[1], lcm(r[0], r[1])));
+    }
+
+    private long f(long d, long r) {
+        return d + (d - 1) / (r - 1);
+    }
 }
+/**
+ * 二分
+ * t - t / r1 >= d1
+ * t - t / r2 >= d2
+ * t - t / lcm(r1,r2) >= d1 + d2   lcm(r1,r2) 两架无人机都不能用
+ */

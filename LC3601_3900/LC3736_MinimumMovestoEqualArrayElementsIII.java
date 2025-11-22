@@ -23,9 +23,11 @@ public class LC3736_MinimumMovestoEqualArrayElementsIII {
      */
     // time = O(n), space = O(1)
     public int minMoves(int[] nums) {
-        int mx = nums[0], res = 0;
-        for (int x : nums) mx = Math.max(mx, x);
-        for (int x : nums) res += mx - x;
-        return res;
+        int mx = nums[0], n = nums.length, s = 0;
+        for (int x : nums) {
+            mx = Math.max(mx, x);
+            s += x;
+        }
+        return mx * n - s;
     }
 }
