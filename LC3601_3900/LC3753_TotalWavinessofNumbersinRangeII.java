@@ -28,64 +28,41 @@ public class LC3753_TotalWavinessofNumbersinRangeII {
      * @param num2
      * @return
      */
-    // time = O(logn), space = O(logn)
-    char[] s;
-    long[][][][] f, g;
+    // time = O(D^2 * n^2), space = O(D * n^2), D = O(log(num2))
+    char[] ls, hs;
+    long[][][][] f;
     public long totalWaviness(long num1, long num2) {
-        return cal(num2) - cal(num1 - 1);
-    }
-
-    private long cal(long x) {
-        s = String.valueOf(x).toCharArray();
-        int n = s.length;
-        f = new long[n][11][11][2];
-        g = new long[n][11][11][2];
+        ls = String.valueOf(num1).toCharArray();
+        hs = String.valueOf(num2).toCharArray();
+        int n = hs.length;
+        f = new long[n][n - 1][3][10];
         for (int i = 0; i < n; i++) {
-            for (int j = 0; j < 11; j++) {
-                for (int k = 0; k < 11; k++) {
+            for (int j = 0; j < n - 1; j++) {
+                for (int k = 0; k < 3; k++) {
                     Arrays.fill(f[i][j][k], -1);
-                    Arrays.fill(g[i][j][k], -1);
                 }
             }
         }
-        return dfs(0, 10, 10, true, true)[1];
+        return dfs(0, 0, 0, 0, true, true);
     }
 
-    private long[] dfs(int u, int pp, int p, boolean isNum, boolean isLimit) {
-        if (u == s.length) return new long[]{1, 0};
-        int t = isNum ? 1 : 0;
-        if (!isLimit && f[u][pp][p][t] != -1) {
-            return new long[]{f[u][pp][p][t], g[u][pp][p][t]};
-        }
+    private long dfs(int u, int w, int lcmp, int last, boolean ll, boolean lh) {
+        if (u == hs.length) return w;
+        if (!ll && !lh && f[u][w][lcmp + 1][last] != -1) return f[u][w][lcmp + 1][last];
 
-        long cnt = 0, tw = 0;
-        int up = isLimit ? s[u] - '0' : 9;
-        for (int i = 0; i <= up; i++) {
-            boolean newLimit = isLimit && i == up;
-            boolean newNum = isNum && i == 0;
-            int npp = 10, np = 10;
-            if (newNum) {
-                npp = 10;
-                np = 10;
-            } else if (isNum) {
-                npp = 10;
-                np = i;
-            } else {
-                npp = p;
-                np = i;
-            }
-            int v = 0;
-            if (!isNum && pp != 10) {
-                if (p > pp && p > i || p < pp && p < i) v = 1;
-            }
-            long[] res = dfs(u + 1, npp, np, newNum, newLimit);
-            cnt += res[0];
-            tw += res[1] + res[0] * v;
+        int dl = hs.length - ls.length;
+        int lo = ll && u >= dl ? ls[u - dl] - '0' : 0;
+        int hi = lh ? hs[u] - '0' : 9;
+
+        long res = 0;
+        boolean isNum = !ll || u > dl; // 前面是否填过数字
+        for (int i = lo; i <= hi; i++) {
+            // 当前填的数不是最高位，cmp 才有意义
+            int cmp = isNum ? (i == last ? 0 : (i > last ? 1 : -1)) : 0;
+            int nw = w + (cmp * lcmp < 0 ? 1 : 0);
+            res += dfs(u + 1, nw, cmp, i, ll && i == lo, lh && i == hi);
         }
-        if (!isLimit) {
-            f[u][pp][p][t] = cnt;
-            g[u][pp][p][t] = tw;
-        }
-        return new long[]{cnt, tw};
+        if (!ll && !lh) f[u][w][lcmp + 1][last] = res;
+        return res;
     }
 }

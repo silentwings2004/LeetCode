@@ -31,37 +31,16 @@ public class LC2211_CountCollisionsonaRoad {
      * @param directions
      * @return
      */
-    // time = O(n), space = O(n)
+    // time = O(n), space = O(1)
     public int countCollisions(String directions) {
-        char[] chars = directions.toCharArray();
-        int n = chars.length, sum = 0;
-        for (int i = 1; i < n; i++) {
-            if (chars[i - 1] == 'S' && chars[i] == 'L') {
-                sum++;
-                chars[i] = 'S';
-            } else if (chars[i - 1] == 'R' && chars[i] == 'S') {
-                sum++;
-                chars[i - 1] = 'S';
-            } else if (chars[i - 1] == 'R' && chars[i] == 'L') {
-                sum += 2;
-                chars[i - 1] = 'S';
-                chars[i] = 'S';
-            }
+        int n = directions.length();
+        int i = 0, j = n - 1;
+        while (i < n && directions.charAt(i) == 'L') i++;
+        while (j >= 0 && directions.charAt(j) == 'R') j--;
+        int res = 0;
+        for (int u = i; u <= j; u++) {
+            if (directions.charAt(u) != 'S') res++;
         }
-
-        for (int i = n - 1; i >= 1; i--) {
-            if (chars[i - 1] == 'S' && chars[i] == 'L') {
-                sum++;
-                chars[i] = 'S';
-            } else if (chars[i - 1] == 'R' && chars[i] == 'S') {
-                sum++;
-                chars[i - 1] = 'S';
-            } else if (chars[i - 1] == 'R' && chars[i] == 'L') {
-                sum += 2;
-                chars[i - 1] = 'S';
-                chars[i] = 'S';
-            }
-        }
-        return sum;
+        return res;
     }
 }

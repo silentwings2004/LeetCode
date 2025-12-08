@@ -45,3 +45,8 @@ public class LC3752_LexicographicallySmallestNegatedPermutationthatSumstoTarget 
         return ns == 0 ? res : new int[0];
     }
 }
+/**
+ * posS + negS = s
+ * posS - negS = t
+ * negS = (s - t) / 2
+ */

@@ -24,6 +24,7 @@ public class LC3750_MinimumNumberofFlipstoReverseBinaryString {
      * @param n
      * @return
      */
+    // S1
     // time = O(logn), space = O(logn)
     public int minimumFlips(int n) {
         String s = Integer.toBinaryString(n);
@@ -33,5 +34,12 @@ public class LC3750_MinimumNumberofFlipstoReverseBinaryString {
             if (s.charAt(i) != t.charAt(i)) res++;
         }
         return res;
+    }
+
+    // S2
+    // time = O(1), space = O(1)
+    public int minimumFlips2(int n) {
+        int r = Integer.reverse(n) >>> Integer.numberOfLeadingZeros(n);
+        return Integer.bitCount(n ^ r);
     }
 }
