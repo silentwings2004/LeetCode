@@ -51,4 +51,21 @@ public class LC3766_MinimumOperationstoMakeBinaryPalindrome {
         }
         return true;
     }
+
+    // S2
+    // time = O(n), space = O(1)
+    public int[] minOperations2(int[] nums) {
+        for (int i = 0; i < nums.length; i++) {
+            int x = nums[i], res = Integer.MAX_VALUE;
+            int n = 32 - Integer.numberOfLeadingZeros(x), m = n / 2;
+            int l = x >> m;
+            for (int j = l - 1; j <= l + 1; j++) {
+                int r = Integer.reverse(j >> (n % 2)) >>> (32 - m);
+                int v = j << m | r;
+                res = Math.min(res, Math.abs(x - v));
+            }
+            nums[i] = res;
+        }
+        return nums;
+    }
 }

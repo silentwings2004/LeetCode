@@ -30,26 +30,23 @@ public class LC3765_CompletePrimeNumber {
      * @param num
      * @return
      */
-    // time = O(logn), space = O(1)
+    // time = O(sqrt(n), space = O(logn)
     public boolean completePrime(int num) {
         String s = String.valueOf(num);
         int n = s.length();
         for (int i = 0; i < n; i++) {
-            if (!check(s, 0, i)) return false;
-        }
-        for (int i = n - 1; i >= 0; i--) {
-            if (!check(s, i, n - 1)) return false;
+            int x = Integer.parseInt(s.substring(0, i + 1));
+            if (!check(x)) return false;
+            x = Integer.parseInt(s.substring(i));
+            if (!check(x)) return false;
         }
         return true;
     }
 
-    private boolean check(String s, int l, int r) {
-        int x = 0;
-        for (int i = l; i <= r; i++) x = x * 10 + s.charAt(i) - '0';
-        if (x < 2) return false;
-        for (int i = 2; i <= x / i; i++) {
-            if (x % i == 0) return false;
+    private boolean check(int n) {
+        for (int i = 2; i <= n / i; i++) {
+            if (n % i == 0) return false;
         }
-        return true;
+        return n >= 2;
     }
 }
