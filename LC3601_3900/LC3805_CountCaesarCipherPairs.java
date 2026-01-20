@@ -34,12 +34,12 @@ public class LC3805_CountCaesarCipherPairs {
     // time = O(n * k), space = O(n * k)
     public long countPairs(String[] words) {
         HashMap<String, Integer> map = new HashMap<>();
+        long res = 0;
         for (String w : words) {
             String t = convert(w);
+            res += map.getOrDefault(t, 0);
             map.put(t, map.getOrDefault(t, 0) + 1);
         }
-        long res = 0;
-        for (int v : map.values()) res += v * (v - 1L) / 2;
         return res;
     }
 

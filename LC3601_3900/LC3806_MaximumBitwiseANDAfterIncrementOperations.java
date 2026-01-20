@@ -29,6 +29,7 @@ public class LC3806_MaximumBitwiseANDAfterIncrementOperations {
      * @param m
      * @return
      */
+    // S1
     // time = O(nlogn + m), space = O(n)
     public int maximumAND(int[] nums, int k, int m) {
         int n = nums.length;
@@ -59,5 +60,29 @@ public class LC3806_MaximumBitwiseANDAfterIncrementOperations {
             }
         }
         return y - x;
+    }
+
+    // S2
+    // time = O(nlogU), space = O(n)  U: max(nums) + k
+    public int maximumAND2(int[] nums, int k, int m) {
+        int mx = nums[0];
+        for (int x : nums) mx = Math.max(mx, x);
+        int n = nums.length, res = 0;
+        int[] ops = new int[n];
+        int maxWidth = 32 - Integer.numberOfLeadingZeros(mx + k);
+        for (int b = maxWidth - 1; b >= 0; b--) {
+            int t = res | 1 << b;
+            for (int i = 0; i < n; i++) {
+                int x = nums[i];
+                int j = 32 - Integer.numberOfLeadingZeros(t & ~x);
+                int mask = (1 << j) - 1;
+                ops[i] = (t & mask) - (x & mask);
+            }
+            Arrays.sort(ops);
+            long s = 0;
+            for (int i = 0; i < m; i++) s += ops[i];
+            if (s <= k) res = t;
+        }
+        return res;
     }
 }
