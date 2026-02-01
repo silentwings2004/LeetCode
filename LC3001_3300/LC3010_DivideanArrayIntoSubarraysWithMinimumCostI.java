@@ -28,6 +28,7 @@ public class LC3010_DivideanArrayIntoSubarraysWithMinimumCostI {
      * @param nums
      * @return
      */
+    // S1
     // time = O(n^2), space = O(1)
     public int minimumCost(int[] nums) {
         int n = nums.length, res = 150;
@@ -37,5 +38,19 @@ public class LC3010_DivideanArrayIntoSubarraysWithMinimumCostI {
             }
         }
         return res;
+    }
+
+    // S2
+    // time = O(n), space = O(1)
+    public int minimumCost2(int[] nums) {
+        int n = nums.length, a = Integer.MAX_VALUE, b = Integer.MAX_VALUE;
+        for (int i = 1; i < n; i++) {
+            int x = nums[i];
+            if (x < a) {
+                b = a;
+                a = x;
+            } else if (x < b) b = x;
+        }
+        return nums[0] + a + b;
     }
 }
