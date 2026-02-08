@@ -34,12 +34,11 @@ public class LC3834_MergeAdjacentEqualElements {
         int n = nums.length;
         long[] stk = new long[n + 1];
         int tt = 0;
-        for (int i = 0; i < n; i++) {
-            if (tt > 0 && stk[tt] == nums[i]) stk[tt] += nums[i];
-            else stk[++tt] = nums[i];
-            while (tt > 1 && stk[tt - 1] == stk[tt]) {
-                stk[tt - 1] += stk[tt];
+        for (int x : nums) {
+            stk[++tt] = x;
+            while (tt > 1 && stk[tt] == stk[tt - 1]) {
                 tt--;
+                stk[tt] *= 2;
             }
         }
         List<Long> res = new ArrayList<>();

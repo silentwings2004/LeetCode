@@ -1,5 +1,5 @@
 package LC3601_3900;
-
+import java.util.*;
 public class LC3835_CountSubarraysWithCostLessThanorEqualtoK {
     /**
      * You are given an integer array nums, and an integer k.
@@ -28,6 +28,7 @@ public class LC3835_CountSubarraysWithCostLessThanorEqualtoK {
      * @param k
      * @return
      */
+    // S1: Deque
     // time = O(n), space = O(n)
     public long countSubarrays(int[] nums, long k) {
         int n = nums.length;
@@ -53,4 +54,36 @@ public class LC3835_CountSubarraysWithCostLessThanorEqualtoK {
         }
         return res;
     }
+
+    // S2: TreeMap
+    // time = O(nlogn), space = O(n)
+    public long countSubarrays2(int[] nums, long k) {
+        int n = nums.length;
+        long res = 0;
+        TreeMap<Integer, Integer> map = new TreeMap<>();
+        for (int i = 0, j = 0; i < n; i++) {
+            map.put(nums[i], map.getOrDefault(nums[i], 0) + 1);
+            while (1L * (map.lastKey() - map.firstKey()) * (i - j + 1) > k) {
+                map.put(nums[j], map.get(nums[j]) - 1);
+                if (map.get(nums[j]) == 0) map.remove(nums[j]);
+                j++;
+            }
+            res += i - j + 1;
+        }
+        return res;
+    }
 }
+/**
+ * ref: LC2762
+ * 核心：窗口越短越满足要求
+ * 按右端点固定的时候，有多少个合法的左端点来分组
+ * [L,R], [L+1,R]...[R,R] => R - L + 1 个
+ *
+ * 1. 连续的
+ * 2. 子数组越长，约不满足题目要求
+ *    子数组越短，越满足题目要求
+ * RMQ, ST表，线段树
+ * 滑动窗口最值 单调队列
+ * 单调栈 = 元素在右边进进出出
+ * 单调队列 = 单调栈+ 元素从左边出去
+ */

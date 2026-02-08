@@ -34,6 +34,7 @@ public class LC3836_MaximumScoreUsingExactlyKPairs {
      * @param k
      * @return
      */
+    // S1
     // time = O(n * m * k), space = O(n * m * k)
     public long maxScore(int[] nums1, int[] nums2, int k) {
         final long inf = (long)1E18;
@@ -60,4 +61,37 @@ public class LC3836_MaximumScoreUsingExactlyKPairs {
         }
         return f[n][m][k];
     }
+
+    // S2: memoization
+    // time = O(n * m * k), space = O(n * m * k)
+    final long inf = (long)1E18;
+    long[][][] f;
+    public long maxScore2(int[] nums1, int[] nums2, int k) {
+        int n = nums1.length, m = nums2.length;
+        f = new long[k + 1][n][m];
+        for (int i = 0; i <= k; i++) {
+            for (int j = 0; j < n; j++) {
+                Arrays.fill(f[i][j], -inf);
+            }
+        }
+        return dfs(nums1, nums2, n - 1, m - 1, k);
+    }
+
+    private long dfs(int[] nums1, int[] nums2, int i, int j, int k) {
+        if (k == 0) return 0;
+        if (i + 1 < k || j + 1 < k) return -inf;
+        if (f[k][i][j] != -inf) return f[k][i][j];
+
+        long v1 = dfs(nums1, nums2, i - 1, j, k);
+        long v2 = dfs(nums1, nums2, i, j - 1, k);
+        long v3 = dfs(nums1, nums2, i - 1, j - 1, k - 1) + 1L * nums1[i] * nums2[j];
+        return f[k][i][j] = Math.max(v1, Math.max(v2, v3));
+    }
 }
+/**
+ * 问题和[子序列]有关
+ * 最长公共子序列 LCS
+ * 子序列 DP
+ * 相邻无关 -> 选或不选 子集 回溯
+ * 相邻相关 -> 枚举选哪个  例如：最长递增子序列 LIS
+ */
