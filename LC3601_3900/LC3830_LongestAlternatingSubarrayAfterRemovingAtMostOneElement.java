@@ -38,32 +38,22 @@ public class LC3830_LongestAlternatingSubarrayAfterRemovingAtMostOneElement {
     // time = O(n), space = O(n)
     public int longestAlternating(int[] nums) {
         int n = nums.length;
-        int[] pre = new int[n], suf = new int[n];
+        int[][][] f = new int[n][2][2]; // f[i][j][k] j: canDel, k: inc
         for (int i = 0; i < n; i++) {
-            if (i == 0 || nums[i] == nums[i - 1]) pre[i] = 1;
-            else if (i == 1 || 1L * (nums[i] - nums[i - 1]) * (nums[i - 1] - nums[i - 2]) < 0) {
-                pre[i] = pre[i - 1] + 1;
-            } else pre[i] = 2;
+            f[i][0][0] = f[i][0][1] = f[i][1][0] = f[i][1][1] = 1;
         }
-        for (int i = n - 1; i >= 0; i--) {
-            if (i == n - 1 || nums[i] == nums[i + 1]) suf[i] = 1;
-            else if (i == n - 2 || 1L * (nums[i + 1] - nums[i]) * (nums[i + 2] - nums[i + 1]) < 0) {
-                suf[i] = suf[i + 1] + 1;
-            } else suf[i] = 2;
-        }
-
-        int res = 0;
-        for (int i = 0; i < n; i++) {
-            res = Math.max(res, pre[i]);
-            if (i == 0) res = Math.max(res, suf[1]);
-            else if (i < n - 1) {
-                res = Math.max(res, Math.max(pre[i - 1], suf[i + 1]));
-                if (nums[i - 1] != nums[i + 1]) {
-                    boolean fl = pre[i - 1] == 1 || 1L * (nums[i - 1] - nums[i - 2]) * (nums[i + 1] - nums[i - 1]) < 0;
-                    boolean fr = suf[i + 1] == 1 || 1L * (nums[i + 1] - nums[i - 1]) * (nums[i + 2] - nums[i + 1]) < 0;
-                    if (fl && fr) res = Math.max(res, pre[i - 1] + suf[i + 1]);
-                }
+        int res = 1;
+        for (int i = 1; i < n; i++) {
+            if (nums[i - 1] != nums[i]) {
+                int t = nums[i - 1] < nums[i] ? 1 : 0;
+                f[i][0][t] = f[i - 1][0][t ^ 1] + 1;
+                f[i][1][t] = f[i - 1][1][t ^ 1] + 1;
             }
+            if (i > 1 && nums[i - 2] != nums[i]) {
+                int t = nums[i - 2] < nums[i] ? 1 : 0;
+                f[i][1][t] = Math.max(f[i][1][t], f[i - 2][0][t ^ 1] + 1);
+            }
+            res = Math.max(res, Math.max(f[i][1][0], f[i][1][1]));
         }
         return res;
     }

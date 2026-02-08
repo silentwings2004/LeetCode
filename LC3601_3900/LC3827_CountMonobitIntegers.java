@@ -20,6 +20,7 @@ public class LC3827_CountMonobitIntegers {
      * @param n
      * @return
      */
+    // S1
     // time = O(1), space = O(1)
     public int countMonobit(int n) {
         int res = 0, x = 0, i = 0;
@@ -29,5 +30,11 @@ public class LC3827_CountMonobitIntegers {
             i++;
         }
         return res;
+    }
+
+    // S2
+    // time = O(1), space = O(1)
+    public int countMonobit2(int n) {
+        return 32 - Integer.numberOfLeadingZeros(n + 1);
     }
 }

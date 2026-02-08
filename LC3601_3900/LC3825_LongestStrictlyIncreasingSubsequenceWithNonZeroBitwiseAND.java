@@ -1,5 +1,7 @@
 package LC3601_3900;
 
+import java.util.Arrays;
+
 public class LC3825_LongestStrictlyIncreasingSubsequenceWithNonZeroBitwiseAND {
     /**
      * You are given an integer array nums.
@@ -26,6 +28,7 @@ public class LC3825_LongestStrictlyIncreasingSubsequenceWithNonZeroBitwiseAND {
      * @param nums
      * @return
      */
+    // S1
     // time = O(nlogn), space = O(n)
     public int longestSubsequence(int[] nums) {
         int n = nums.length, res = 0;
@@ -43,6 +46,29 @@ public class LC3825_LongestStrictlyIncreasingSubsequenceWithNonZeroBitwiseAND {
                 }
                 f[r] = x;
                 if (r == len) len++;
+            }
+            res = Math.max(res, len);
+        }
+        return res;
+    }
+
+    // S2
+    // time = O(nlogn * logU), space = O(n)  U: max(nums)
+    public int longestSubsequence2(int[] nums) {
+        int mx = nums[0];
+        for (int x : nums) mx = Math.max(mx, x);
+        int w = 32 - Integer.numberOfLeadingZeros(mx);
+
+        int n = nums.length, res = 0;
+        int[] f = new int[n];
+        for (int i = 0; i < w; i++) {
+            int len = 0;
+            for (int x : nums) {
+                if ((x >> i & 1) == 0) continue;
+                int j = Arrays.binarySearch(f, 0, len, x);
+                if (j < 0) j = ~j;
+                f[j] = x;
+                if (j == len) len++;
             }
             res = Math.max(res, len);
         }
