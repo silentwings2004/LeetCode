@@ -42,3 +42,8 @@ public class LC3840_HouseRobberV {
         return Math.max(f[n - 1 & 1][0], f[n - 1 & 1][1]);
     }
 }
+/**
+ * LC198 打家劫舍
+ * 如果所有颜色都相同，完全等于 LC198
+ * 颜色不同的相邻房子 x 和 y， 偷 y 不影响 x
+ */

@@ -53,3 +53,7 @@ public class LC3839_NumberofPrefixConnectedGroups {
         return res;
     }
 }
+/**
+ * 有多少个长为 k 的出现次数大于 1 的不同前缀
+ * 忽略长度小于 k 的字符串
+ */
