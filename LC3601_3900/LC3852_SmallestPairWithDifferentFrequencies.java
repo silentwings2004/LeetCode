@@ -50,3 +50,6 @@ public class LC3852_SmallestPairWithDifferentFrequencies {
         return res;
     }
 }
+/**
+ * 脑筋急转弯 => min(nums)
+ */

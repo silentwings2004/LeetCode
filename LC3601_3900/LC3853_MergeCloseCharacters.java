@@ -33,6 +33,7 @@ public class LC3853_MergeCloseCharacters {
      * @param k
      * @return
      */
+    // S1
     // time = O(n), space = O(n)
     public String mergeCharacters(String s, int k) {
         int n = s.length();
@@ -49,6 +50,23 @@ public class LC3853_MergeCloseCharacters {
         }
         StringBuilder sb = new StringBuilder();
         for (int i = 1; i <= tt; i++) sb.append(s.charAt(stk[i]));
+        return sb.toString();
+    }
+
+    // S2
+    // time = O(n), space = O(n)
+    public String mergeCharacters2(String s, int k) {
+        int[] pos = new int[26];
+        Arrays.fill(pos, -k - 1);
+        StringBuilder sb = new StringBuilder();
+        int n = s.length();
+        for (int i = 0; i < n; i++) {
+            int u = s.charAt(i) - 'a';
+            if (sb.length() - pos[u] > k) {
+                pos[u] = sb.length();
+                sb.append(s.charAt(i));
+            }
+        }
         return sb.toString();
     }
 }

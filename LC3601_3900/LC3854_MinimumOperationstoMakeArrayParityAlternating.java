@@ -99,4 +99,49 @@ public class LC3854_MinimumOperationstoMakeArrayParityAlternating {
         }
         return res;
     }
+
+    // S2
+    // time = O(n), space = O(1)
+    public int[] makeParityAlternating2(int[] nums) {
+        int n = nums.length, mn = nums[0], mx = nums[0];
+        if (n == 1) return new int[2];
+        for (int x : nums) {
+            mn = Math.min(mn, x);
+            mx = Math.max(mx, x);
+        }
+        int[] a = cal(nums, mn, mx, 0);
+        int[] b = cal(nums, mn, mx, 1);
+        if (a[0] < b[0] || a[0] == b[0] && a[1] < b[1]) return a;
+        return b;
+    }
+
+    private int[] cal(int[] nums, int mn, int mx, int t) {
+        int n = nums.length, op = 0;
+        int a = Integer.MAX_VALUE, b = Integer.MIN_VALUE;
+        for (int i = 0; i < n; i++) {
+            int x = nums[i];
+            if (((x - i) & 1) != t) {
+                op++;
+                if (x == mn) x++;
+                else if (x == mx) x--;
+            }
+            a = Math.min(a, x);
+            b = Math.max(b, x);
+        }
+        return new int[]{op, Math.max(b - a, 1)};
+    }
 }
+/**
+ * 极差
+ * 通用想法
+ * [x]
+ * [x-1, x+1]
+ * => ref: LC632
+ * 把每个数字理解成一个列表，找一个值域范围
+ * n >= 2, d >= 1
+ * 把数组分成三类
+ * 如果是最小值 => + 1
+ * 如果是最大值 => - 1
+ * 符合性质 P 的数是否存在
+ * 证明存在性，但无法给出一个具体的数
+ */
