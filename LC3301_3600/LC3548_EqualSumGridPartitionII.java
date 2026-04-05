@@ -42,22 +42,24 @@ public class LC3548_EqualSumGridPartitionII {
         long[] rs = new long[m], cs = new long[n];
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
-                int v = grid[i][j];
-                tot += v;
-                rs[i] += v;
-                cs[j] += v;
+                tot += grid[i][j];
+                rs[i] += grid[i][j];
+                cs[j] += grid[i][j];
             }
         }
 
-        long[] s1 = new long[m + 1], s2 = new long[n + 1];
-        for (int i = 1; i <= m; i++) s1[i] = s1[i - 1] + rs[i - 1];
-        for (int j = 1; j <= n; j++) s2[j] = s2[j - 1] + cs[j - 1];
+        long[] s1 = new long[m], s2 = new long[n];
+        s1[0] = rs[0];
+        s2[0] = cs[0];
+        for (int i = 1; i < m; i++) s1[i] = s1[i - 1] + rs[i];
+        for (int j = 1; j < n; j++) s2[j] = s2[j - 1] + cs[j];
 
-        HashMap<Integer, List<Integer>> rm = new HashMap<>();
-        HashMap<Integer, List<Integer>> cm = new HashMap<>();
+        HashMap<Long, List<Integer>> rm = new HashMap<>();
+        HashMap<Long, List<Integer>> cm = new HashMap<>();
+
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
-                int v = grid[i][j];
+                long v = grid[i][j];
                 rm.putIfAbsent(v, new ArrayList<>());
                 cm.putIfAbsent(v, new ArrayList<>());
                 rm.get(v).add(i);
@@ -68,50 +70,45 @@ public class LC3548_EqualSumGridPartitionII {
         for (List<Integer> v : rm.values()) Collections.sort(v);
         for (List<Integer> v : cm.values()) Collections.sort(v);
 
-        // horizontal split
         for (int i = 0; i < m - 1; i++) {
-            long su = s1[i + 1], sd = tot - su;
+            long su = s1[i], sd = tot - su;
             if (su == sd) return true;
-
             long d = Math.abs(su - sd);
-            int r = su > sd ? i + 1 : m - (i + 1);
-            int st = su > sd ? 0 : i + 1;
-            int ed = su > sd ? i : m - 1;
-            if (r >= 2 && n >= 2) {
-                List<Integer> q = rm.getOrDefault((int)d, new ArrayList<>());
-                if (check(q, st, ed)) return true;
-            } else if (r == 1) {
-                if (grid[st][0] == d || grid[st][n - 1] == d) return true;
+            int r1 = su > sd ? i + 1 : m - (i + 1);
+            int start = su > sd ? 0 : i + 1;
+            int end = su > sd ? i : m - 1;
+            if (r1 >= 2 && n >= 2) {
+                List<Integer> q = rm.getOrDefault(d, new ArrayList<>());
+                if (check(q, start, end)) return true;
+            } else if (r1 == 1) {
+                if (grid[start][0] == d || grid[start][n - 1] == d) return true;
             } else if (n == 1) {
-                if (grid[st][0] == d || grid[ed][0] == d) return true;
+                if (grid[start][0] == d || grid[end][0] == d) return true;
             }
         }
 
-        // vertical split
         for (int j = 0; j < n - 1; j++) {
-            long sl = s2[j + 1], sr = tot - sl;
+            long sl = s2[j], sr = tot - sl;
             if (sl == sr) return true;
-
             long d = Math.abs(sl - sr);
-            int c = sl > sr ? j + 1 : n - (j + 1);
-            int st = sl > sr ? 0 : j + 1;
-            int ed = sl > sr ? j : n - 1;
-            if (c >= 2 && m >= 2) {
-                List<Integer> q = cm.getOrDefault((int)d, new ArrayList<>());
-                if (check(q, st, ed)) return true;
-            } else if (c == 1) {
-                if (grid[0][st] == d || grid[m - 1][st] == d) return true;
+            int c1 = sl > sr ? j + 1 : n - (j + 1);
+            int start = sl > sr ? 0 : j + 1;
+            int end = sl > sr ? j : n - 1;
+            if (c1 >= 2 && m >= 2) {
+                List<Integer> q = cm.getOrDefault(d, new ArrayList<>());
+                if (check(q, start, end)) return true;
+            } else if (c1 == 1) {
+                if (grid[0][start] == d || grid[m - 1][start] == d) return true;
             } else if (m == 1) {
-                if (grid[0][st] == d || grid[0][ed] == d) return true;
+                if (grid[0][start] == d || grid[0][end] == d) return true;
             }
         }
         return false;
     }
 
     private boolean check(List<Integer> q, int st, int ed) {
-        int m = q.size();
-        if (m == 0) return false;
-        int l = 0, r = m - 1;
+        if (q.size() == 0) return false;
+        int m = q.size(), l = 0, r = m - 1;
         while (l < r) {
             int mid = l + r >> 1;
             if (q.get(mid) >= st) r = mid;

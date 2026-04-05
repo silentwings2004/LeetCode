@@ -29,6 +29,7 @@ public class LC2573_FindtheStringwithLCP {
      * @param lcp
      * @return
      */
+    // S1
     // time = O(n^2), space = O(n)
     public String findTheString(int[][] lcp) {
         int n = lcp.length;
@@ -71,5 +72,28 @@ public class LC2573_FindtheStringwithLCP {
             }
         }
         return String.valueOf(chars);
+    }
+
+    // S2
+    // time = O(n^2), space = O(1)
+    public String findTheString2(int[][] lcp) {
+        int n = lcp.length, i = 0;
+        char[] s = new char[n];
+        for (char c = 'a'; c <= 'z'; c++) {
+            for (int j = i; j < n; j++) {
+                if (lcp[i][j] > 0) s[j] = c;
+            }
+            while (i < n && s[i] > 0) i++;
+            if (i == n) break;
+        }
+        if (i < n) return "";
+
+        for (i = n - 1; i >= 0; i--) {
+            for (int j = n - 1; j >= 0; j--) {
+                int t = s[i] != s[j] ? 0 : (i == n - 1 || j == n - 1 ? 1 : lcp[i + 1][j + 1] + 1);
+                if (lcp[i][j] != t) return "";
+            }
+        }
+        return String.valueOf(s);
     }
 }

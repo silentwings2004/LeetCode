@@ -41,6 +41,7 @@ public class LC2075_DecodetheSlantedCiphertext {
      * @param rows
      * @return
      */
+    // time = O(n), space = O(n)
     public String decodeCiphertext(String encodedText, int rows) {
         int n = encodedText.length();
         int cols = n / rows;
