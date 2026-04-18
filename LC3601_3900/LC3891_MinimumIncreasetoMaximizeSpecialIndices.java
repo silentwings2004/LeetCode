@@ -52,9 +52,15 @@ public class LC3891_MinimumIncreasetoMaximizeSpecialIndices {
 
         long res = suf[2];
         for (int i = 1; i + 2 < n; i += 2) {
-            long v = pre[i] + (i + 3 < n ? suf[i + 3] : 0);
+            long v = pre[i] + (i + 3 < n ? suf[i + 3] : 0); // 中间 2 个数字不选
             res = Math.min(res, v);
         }
         return res;
     }
 }
+/**
+ * n 无论奇偶 => 可选 (n-1) / 2
+ * 奇数的情况是固定的
+ * 偶数的话，可以允许有一个数字不变成局部最大值
+ * 枚举中间哪 2 个数字可以不选
+ */
