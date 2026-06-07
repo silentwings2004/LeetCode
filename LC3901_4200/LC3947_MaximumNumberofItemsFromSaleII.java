@@ -36,6 +36,7 @@ public class LC3947_MaximumNumberofItemsFromSaleII {
      * @param budget
      * @return
      */
+    // S1
     // time = O(nlogn), space = O(n)
     public int maximumSaleItems(int[][] items, int budget) {
         int n = items.length;
@@ -70,4 +71,45 @@ public class LC3947_MaximumNumberofItemsFromSaleII {
         }
         return 2 * p + r / minv;
     }
+
+    // S2
+    // time = O(nlogn), space = O(n)
+    public int maximumSaleItems2(int[][] items, int budget) {
+        int n = items.length;
+        int[] cnt_factor = new int[n + 1];
+        int min_price = items[0][1];
+        for (int i = 0; i < n; i++) {
+            int factor = items[i][0], price = items[i][1];
+            cnt_factor[factor]++;
+            min_price = Math.min(min_price, price);
+        }
+        int[] cnt_multi = new int[n + 1];
+        List<int[]> q = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            int factor = items[i][0], price = items[i][1];
+            if (price >= min_price * 2) continue;
+            if (cnt_multi[factor] == 0) {
+                for (int j = factor; j <= n; j += factor) {
+                    cnt_multi[factor] += cnt_factor[j];
+                }
+            }
+            int cnt = cnt_multi[factor] - 1;
+            if (cnt > 0) q.add(new int[]{price, cnt});
+        }
+        Collections.sort(q, (o1, o2) -> o1[0] - o2[0]);
+        int res = 0;
+        for (int[] x : q) {
+            int price = x[0], cnt = x[1];
+            if (budget < price) break;
+            int c = Math.min(cnt, budget / price);
+            budget -= c * price;
+            res += c * 2;
+        }
+        return res + budget / min_price;
+    }
 }
+/**
+ * 每次购买，要么没有免费物品，最多获得一个免费物品一共 2 个物品 => 贪心策略
+ * 价格 >= 2 * minP 的物品完全不用考虑
+ * 先考虑买一送一，价格从低到高 => 贪心 最大化物品总数，当然从价格最低的开始购买
+ */

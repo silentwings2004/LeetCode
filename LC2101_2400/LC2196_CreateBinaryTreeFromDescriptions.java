@@ -15,6 +15,7 @@ public class LC2196_CreateBinaryTreeFromDescriptions {
      * @param descriptions
      * @return
      */
+    // S1
     // time = O(n), space = O(n)
     public TreeNode createBinaryTree(int[][] descriptions) {
         HashMap<Integer, TreeNode> map = new HashMap<>();
@@ -34,6 +35,29 @@ public class LC2196_CreateBinaryTreeFromDescriptions {
             if (set.contains(x[0])) continue;
             root = map.get(x[0]);
             break;
+        }
+        return root;
+    }
+
+    // S2
+    // time = O(n), space = O(n)
+    public TreeNode createBinaryTree2(int[][] descriptions) {
+        TreeNode[] nodes = new TreeNode[100010];
+        boolean[] hasParent = new boolean[100010];
+        for (int[] x : descriptions) {
+            int p = x[0], c = x[1], isLeft = x[2];
+            if (nodes[p] == null) nodes[p] = new TreeNode(p);
+            if (nodes[c] == null) nodes[c] = new TreeNode(c);
+            if (isLeft == 1) nodes[p].left = nodes[c];
+            else nodes[p].right = nodes[c];
+            hasParent[x[1]] = true;
+        }
+        TreeNode root = null;
+        for (int i = 0; i <= 100000; i++) {
+            if (nodes[i] != null && !hasParent[i]) {
+                root = nodes[i];
+                break;
+            }
         }
         return root;
     }

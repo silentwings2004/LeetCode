@@ -58,3 +58,8 @@ public class LC3948_LexicographicallyMaximumMEXArray {
         return Arrays.copyOf(nums, idx);
     }
 }
+/**
+ * MEX 有单调性：包含的数字越多，MEX 越大（或不变）
+ * 想清楚第一刀切在哪，切在 MEX 不会变大的位置，后面都是同样的子问题
+ * 0 0 2 2 1 | 1 0 | 5
+ */
