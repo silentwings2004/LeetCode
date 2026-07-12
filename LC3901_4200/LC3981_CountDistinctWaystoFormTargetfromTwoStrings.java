@@ -74,3 +74,31 @@ public class LC3981_CountDistinctWaystoFormTargetfromTwoStrings {
         return memo[u][a][b][f][g] = (int)res;
     }
 }
+/**
+ * t = abaab
+ * w1 = aabb
+ * w2 = baabc
+ * dfs(i,j,k) 表示target[0,i]是由 word1[0,j]和 word2[0,k] 中的字母组成的，返回对应的方案数
+ * word1[j] 和 word2[k] 是否在 target 中
+ * 1. 都不在（都不选）
+ * 2. word1[j] 在 target 中，word2[k] 不在
+ * 3. word1[j] 不在 target 中，word2[k] 在
+ * 4. word1[j] 和 word2[k] 都在 target 中
+ *
+ * 如果 word1[j] 不在 target 中，那么问题变成 target[0,i] 是由 word1[0,j-1] 和 word2[0,k] 中的字母组成的
+ * 方案数为 dfs(i,j-1,k), 包含了情况 1 + 情况 3
+ * 如果 word2[k] 不在 target 中，那么问题变成 target[0,i] 是由 word1[0,j] 和 word2[0,k-1] 中的字母组成的
+ * 方案数为 dfs(i,j,k-1), 包含了情况 1 + 情况 2
+ *
+ * 情况 1 = target[0,i] 是由 word1[0,j-1] 和 word2[0,k-1] 中的字母组成的
+ * 方案数为 dfs(i,j-1,k-1)
+ * 情况 1 + 情况 2 + 情况 3 = dfs(i,j-1,k) + dfs(i,j,k-1) - dfs(i,j-1,k-1)
+ *
+ * 情况4，target[i] 一定要和 word1[j] 或者 word2[k] 中的一个匹配
+ * 情况 4A
+ * target[i] 和 word1[j] 匹配
+ * 那么问题变成 target[0,i-1] 是由 word1[0,j-1] 和 word2[0,k] 中的字母组成的，并且 word2[k] 一定出现在 target[0,i-1] 中
+ * dfs(i-1,j-1,k) - 不符合情况 4 的方案
+ * = dfs(i-1,j-1,k) - (target[0,i-1] 是由 word1[0,j-1] 和 word2[0,k-1] 中的字母组成的)
+ * = dfs(i-1,j-1,k) - dfs(i-1,j-1,k-1)
+ */
