@@ -39,6 +39,7 @@ public class LC4023_ElevatorRequestsII {
      * @param requests
      * @return
      */
+    // S1
     // time = O(n^2), space = O(n^2)
     public long elevatorRequests(int n, int start, int[] requests) {
         Arrays.sort(requests);
@@ -94,4 +95,49 @@ public class LC4023_ElevatorRequestsII {
         }
         return Math.min(f[0][m - 1][0], f[0][m - 1][1]);
     }
+
+    // S2
+    // time = O(m^2), space = O(m^2)
+    final long inf = (long)1E18;
+    int[] a;
+    long[][][] f;
+    public long elevatorRequests2(int n, int start, int[] requests) {
+        int m = requests.length + 3;
+        a = Arrays.copyOf(requests, m);
+        a[m - 3] = start;
+        a[m - 2] = -1;
+        a[m - 1] = n;
+        Arrays.sort(a);
+
+        f = new long[m - 1][m - 1][2];
+        for (int i = 0; i < m - 1; i++) {
+            for (int j = 0; j < m - 1; j++) {
+                Arrays.fill(f[i][j], -1);
+            }
+        }
+
+        int i = Arrays.binarySearch(a, start);
+        return dfs(i, i, 0);
+    }
+
+    private long dfs(int i, int j, int isRight) {
+        int m = a.length;
+        if (i == 0 || j == m - 1) return inf;
+        if (i == 1 && j == m - 2) return 0;
+
+        if (f[i][j][isRight] != -1) return f[i][j][isRight];
+
+        int x = a[isRight > 0 ? j : i];
+        int remain = m - 2 - (j - i + 1);
+        long res = Math.min(dfs(i - 1, j, 0) + 1L * (x - a[i - 1]) * remain,
+                dfs(i, j + 1, 1) + 1L * (a[j + 1] - x) * remain);
+        return f[i][j][isRight] = res;
+    }
 }
+/**
+ * 3 -> 9
+ * 3 -> 5 -> 9
+ * 一步步走，枚举离得最近的楼层
+ * [a,   b]
+ * [i,j] k = 0,1
+ */

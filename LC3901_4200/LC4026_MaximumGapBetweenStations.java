@@ -42,22 +42,25 @@ public class LC4026_MaximumGapBetweenStations {
     // time = O(n), space = O(n)
     public int maximumGap(String skill, String station) {
         int n = skill.length(), m = station.length();
-        int[] l = new int[n];
-        for (int i = 0, j = 0; i < n; i++, j++) {
-            while (station.charAt(j) != skill.charAt(i)) j++;
-            l[i] = j;
-        }
-
-        int[] r = new int[n];
+        int[] suf = new int[n];
         for (int i = n - 1, j = m - 1; i >= 0; i--, j--) {
             while (station.charAt(j) != skill.charAt(i)) j--;
-            r[i] = j;
+            suf[i] = j;
         }
 
         int res = 0;
-        for (int i = 0; i + 1 < n; i++) {
-            res = Math.max(res, r[i + 1] - l[i]);
+        for (int i = 0, j = 0; i < n - 1; i++, j++) {
+            while (station.charAt(j) != skill.charAt(i)) j++;
+            res = Math.max(res, suf[i + 1] - j);
         }
         return res;
     }
 }
+/**
+ * 枚举 i：在哪里产生了最大的差值
+ * j1 - j0 => j1 尽量大，j0 尽量小
+ * 寻找一个最短的前缀和后缀，之间的距离就是最大差值
+ * 最短的前缀，包含 s 的前 i 个字母
+ * 最短的后缀，包含 s 的后 i 个字母
+ * 子序列问题 => 双指针
+ */

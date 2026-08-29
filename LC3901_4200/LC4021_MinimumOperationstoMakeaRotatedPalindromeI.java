@@ -41,3 +41,8 @@ public class LC4021_MinimumOperationstoMakeaRotatedPalindromeI {
         return res;
     }
 }
+/**
+ * 2 cases:
+ * 1. y - x
+ * 2. 26 - (y - x)
+ */

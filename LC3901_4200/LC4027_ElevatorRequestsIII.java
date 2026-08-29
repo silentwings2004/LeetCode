@@ -38,6 +38,7 @@ public class LC4027_ElevatorRequestsIII {
      * @param requests
      * @return
      */
+    // S1
     // time = O(2^m * m^2), space = O(2^m * m)
     public long elevatorRequests(int n, int start, int[][] requests) {
         final long inf = (long)1E18;
@@ -65,4 +66,42 @@ public class LC4027_ElevatorRequestsIII {
         for (int i = 0; i < m; i++) res = Math.min(res, f[(1 << m) - 1][i]);
         return res;
     }
+
+    // S2: Memoization
+    // time = O(2^m * m^2), space = O(2^m * m)
+    final long inf = (long)1E18;
+    int[][] requests;
+    int start;
+    long[][] f;
+    public long elevatorRequests2(int n, int start, int[][] requests) {
+        this.requests = requests;
+        this.start = start;
+        int m = requests.length;
+        f = new long[1 << m][m];
+        for (int i = 0; i < 1 << m; i++) Arrays.fill(f[i], -1);
+
+        long res = inf;
+        for (int i = 0; i < m; i++) res = Math.min(res, dfs((1 << m) - 1, i));
+        return res;
+    }
+
+    private long dfs(int mask, int u) {
+        mask ^= 1 << u;
+        int t = requests[u][0], x = requests[u][1];
+
+        if (mask == 0) return Math.max(Math.abs(x - start), t);
+        if (f[mask][u] != -1) return f[mask][u];
+
+        long res = inf;
+        for (int j = 0; j < requests.length; j++) {
+            if ((mask >> j & 1) == 1) {
+                res = Math.min(res, dfs(mask, j) + Math.abs(requests[j][1] - x));
+            }
+        }
+        res = Math.max(res, t);
+        return f[mask][u] = res;
+    }
 }
+/**
+ * ({1,2,3}, 3) -> ({1,2,3,5}, 5) T = ? s  => min
+ */

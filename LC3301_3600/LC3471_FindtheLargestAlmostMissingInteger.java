@@ -28,7 +28,8 @@ public class LC3471_FindtheLargestAlmostMissingInteger {
      * @param k
      * @return
      */
-    // time = O(n), space = O(n)
+    // S1
+    // time = O(n^2), space = O(n)
     public int largestInteger(int[] nums, int k) {
         int n = nums.length, res = -1;
         for (int x : nums) {
@@ -51,6 +52,31 @@ public class LC3471_FindtheLargestAlmostMissingInteger {
             }
             if (f && t == 1) res = Math.max(res, x);
         }
+        return res;
+    }
+
+    // S2
+    // time = O(n), space = O(1)
+    public int largestInteger2(int[] nums, int k) {
+        int n = nums.length;
+        if (n == k) {
+            int res = nums[0];
+            for (int x : nums) res = Math.max(res, x);
+            return res;
+        }
+
+        int[] cnt = new int[51];
+        for (int x : nums) cnt[x]++;
+        if (k == 1) {
+            for (int i = 50; i >= 0; i--) {
+                if (cnt[i] == 1) return i;
+            }
+            return -1;
+        }
+
+        int res = -1;
+        if (cnt[nums[0]] == 1) res = Math.max(res, nums[0]);
+        if (cnt[nums[n - 1]] == 1) res = Math.max(res, nums[n - 1]);
         return res;
     }
 }
