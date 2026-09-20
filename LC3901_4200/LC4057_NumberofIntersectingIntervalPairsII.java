@@ -51,3 +51,9 @@ public class LC4057_NumberofIntersectingIntervalPairsII {
         return a[r] > t ? r : r + 1;
     }
 }
+/**
+ * 先排序，不影响区间相交
+ * 按照左端点还是右端点进行排序？
+ * 转化成不相交更好求 => 右端点都在左端点的左边
+ * 按照右端点排序，与当前区间不相交的区间
+ */

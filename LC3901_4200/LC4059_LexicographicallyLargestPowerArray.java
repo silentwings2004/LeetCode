@@ -1,5 +1,5 @@
 package LC3901_4200;
-
+import java.util.*;
 public class LC4059_LexicographicallyLargestPowerArray {
     /**
      * You are given an integer array nums of length n. You may rearrange its elements to form any permutation perm.
@@ -31,6 +31,7 @@ public class LC4059_LexicographicallyLargestPowerArray {
      * @param nums
      * @return
      */
+    // S1
     // time = O(n), space = O(n)
     public int[] largestPower(int[] nums) {
         int n = nums.length;
@@ -75,4 +76,31 @@ public class LC4059_LexicographicallyLargestPowerArray {
         }
         return power;
     }
+
+    // S2: Greedy
+    // time = O(nlognlogU), space = O(logn)   U: max{nums}
+    public int[] largestPower2(int[] nums) {
+        int n = nums.length;
+        int[] res = new int[15];
+        Arrays.sort(nums);
+
+        int mw = 32 - Integer.numberOfLeadingZeros(nums[n - 1]);
+        for (int i = mw - 1; i >= 0; i--) {
+            int j = n - 1;
+            while (j >= 0 && (nums[j] >> i & 1) == 1) j--;
+            res[14 - i] = n - 1 - j; // 找最长前缀连续 1
+
+            // [j+1, n-1] 这一位都是 1，其余元素无关紧要，为方便排序，全置为 0
+            for (; j >= 0; j--) nums[j] &= ~(1 << i);
+            Arrays.sort(nums);
+        }
+        return res;
+    }
 }
+/**
+ * 从上到下看，最长的只有 1 的前缀的长度是多少
+ * 保证最高位连续 1 的长度最长
+ * 高位的 1 往前排
+ * 最高位：从大到小排，没问题
+ * 次高位：保证高位不能动，后面的位无关紧要 => 都可以改成 0，额外把后面无关的 0 和 1 都改成 0
+ */
