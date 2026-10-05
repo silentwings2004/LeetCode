@@ -38,6 +38,21 @@ public class LC856_ScoreofParentheses {
         }
         return stk.peek();
     }
+
+    // S2: 找规律
+    // time = O(n), space = O(1)
+    public int scoreOfParentheses2(String s) {
+        int n = s.length(), res = 0, d = 0;
+        for (int i = 0; i < n; i++) {
+            char c = s.charAt(i);
+            if (c == '(') d++;
+            else {
+                d--;
+                if (s.charAt(i - 1) == '(') res += 1 << d;
+            }
+        }
+        return res;
+    }
 }
 /**
  * use stack
