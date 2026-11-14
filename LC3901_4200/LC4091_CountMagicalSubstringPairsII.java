@@ -72,3 +72,10 @@ public class LC4091_CountMagicalSubstringPairsII {
         return res;
     }
 }
+/**
+ * 恰好型滑动窗口
+ * 52 次滑动窗口
+ * S2: Log Trick
+ *  把 s[i] 视作 1 << (s[i] - 'a')
+ *  子串不同字母个数 = 子数组 OR 的二进制的 1 的个数
+ */

@@ -26,6 +26,7 @@ public class LC4089_CountSubarraysWithLooseBounds {
      * @param maxK
      * @return
      */
+    // S1
     // time = O(n), space = O(1)
     public long countSubarrays(int[] nums, int minK, int maxK) {
         int n = nums.length;
@@ -41,4 +42,19 @@ public class LC4089_CountSubarraysWithLooseBounds {
         }
         return res;
     }
+
+    // S2
+    // time = O(n), space = O(1)
+    public long countSubarrays2(int[] nums, int minK, int maxK) {
+        long res = 0;
+        int n = nums.length, ed = -1;
+        for (int i = 0; i < n; i++) {
+            if (nums[i] < minK || nums[i] > maxK) ed = i;
+            else res += i - ed;
+        }
+        return res;
+    }
 }
+/**
+ * 扩展: LC2444
+ */
